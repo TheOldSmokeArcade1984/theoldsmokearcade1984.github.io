@@ -1,7 +1,5 @@
 🕹️ TheOldSmokeArcade1984 OS
 
-clicca qui per visitare -------> https://theoldsmokearcade1984.github.io/TheOldSmokeArcade1984/ <-------
-
 Welcome to the Arcade. Booting system... / Benvenuti in sala giochi. Avvio sistema...
 
 [ITA]TheOldSmokeArcade1984 OS è l'hub ufficiale per i miei progetti di game development. Un sistema operativo retro-arcade immersivo che ospita una collezione di oltre 12 titoli indipendenti, moduli di infiltrazione tattica e puzzle game, il tutto avvolto in un'estetica cyberpunk/synthwave.
