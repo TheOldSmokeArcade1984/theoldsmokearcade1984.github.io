@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TheOldSmokeArcade1984 - OS</title>
+    
+    <meta name="description" content="Hub ufficiale di TheOldSmokeArcade1984. Sviluppo indipendente di giochi retro arcade e cyberpunk.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2305010a'/><path d='M32 8 L56 32 L32 56 L8 32 Z' fill='none' stroke='%2300ffcc' stroke-width='4'/><circle cx='32' cy='32' r='8' fill='%23ff0055' filter='drop-shadow(0 0 5px %23ff0055)'/></svg>" type="image/svg+xml">
+
+    <!-- === PWA MANIFEST & MOBILE SUPPORT === -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#05010a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="OldSmokeArcade">
+    <link rel="apple-touch-icon" href="icon.svg">
+
+    <style>
+        /* === 0. PALETTE CYBERPUNK / SYNTHWAVE === */
+        :root {
+            --bg-void: #05010a;
+            --bg-panel: #0a0514;
+            --text-main: #ffffff;
+            --text-dim: #aaaaaa;
+            
+            --laser-pri: #ff0055;
+            --laser-sec: #00ffcc;
+            
+            --plasma-pri: #bc13fe;
+            --plasma-sec: #fcee0a;
+        }
+
+        /* === 1. RESET E BLOCCO SCROLL GLOBALE === */
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
+        
+        html, body {
+            width: 100vw; height: 100vh;
+            background-color: var(--bg-void); color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden; perspective: 1200px;
+        }
+
+        /* Effetto CRT Globale (Cinematic PC) */
+        .global-crt {
+            position: fixed; inset: 0; pointer-events: none; z-index: 99998;
+            background: radial-gradient(circle at center, transparent 40%, rgba(5, 1, 10, 0.9) 100%);
+            display: none;
+        }
+
+        @media (min-width: 900px) {
+            .global-crt { display: block; animation: crtFlicker 0.15s infinite; }
+            .global-crt::after {
+                content: " "; display: block; position: absolute; inset: 0;
+                background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                            linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+                z-index: 2; background-size: 100% 3px, 3px 100%; pointer-events: none;
+            }
+        }
+        @keyframes crtFlicker { 0% { opacity: 0.97; } 50% { opacity: 1; } 100% { opacity: 0.97; } }
+
+        /* OVERLAY PORTRAIT LOCK (Mobile) */
+        #portrait-lock {
+            display: none; position: fixed; inset: 0; background: var(--bg-void); z-index: 999999;
+            color: var(--laser-pri); flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; padding: 20px;
+        }
+        #portrait-lock h2 { font-size: 2rem; text-transform: uppercase; text-shadow: 0 0 20px var(--laser-pri); animation: blink 1.5s infinite; }
+        #portrait-lock p { color: var(--laser-sec); margin-top: 15px; font-size: 1.2rem; text-shadow: 0 0 10px var(--laser-sec); }
+        @media (orientation: landscape) and (max-height: 600px) and (hover: none) { #portrait-lock { display: flex; } }
+
+        /* === 2. GESTIONE STANZE (SCREENS) === */
+        .screen {
+            position: absolute; inset: 0; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; opacity: 0; pointer-events: none; 
+            z-index: 10; transform: scale(1.1) translateZ(-100px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease;
+        }
+        
+        .screen.active {
+            opacity: 1; pointer-events: auto; z-index: 20; transform: scale(1) translateZ(0);
+        }
+
+        body.modal-open .screen.active, body.modal-open .system-bar { filter: blur(8px) brightness(0.4); transform: scale(0.95); pointer-events: none; }
+
+        /* === 3. BARRA DI SISTEMA === */
+        .system-bar {
+            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
+            background: rgba(5, 1, 10, 0.95); border-bottom: 1px solid #222;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 15px; z-index: 100; transition: filter 0.4s ease; opacity: 0; pointer-events: none;
+        }
+        .system-bar.visible { animation: fadeInSys 1s forwards; pointer-events: auto; }
+        @keyframes fadeInSys { to { opacity: 1; } }
+        
+        .sys-group { display: flex; gap: 10px; }
+        .sys-btn {
+            background: transparent; border: 1px solid #555; color: var(--text-dim);
+            padding: 6px 10px; cursor: pointer; font-family: inherit; font-weight: bold;
+            transition: all 0.3s; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+        }
+        .sys-btn:hover { color: var(--text-main); border-color: var(--text-main); background: rgba(255,255,255,0.1); }
+        .sys-btn.active { color: var(--laser-sec); border-color: var(--laser-sec); text-shadow: 0 0 8px var(--laser-sec); }
+
+        /* Tooltip personalizzati neon */
+        @media (hover: hover) and (pointer: fine) {
+            .sys-btn {
+                position: relative;
+            }
+            .sys-btn::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                top: calc(100% + 10px);
+                left: 50%;
+                transform: translateX(-50%) translateY(8px);
+                background: rgba(5, 1, 10, 0.97);
+                color: #fff;
+                font-size: 0.72rem;
+                padding: 8px 13px;
+                border-radius: 5px;
+                border: 1px solid var(--laser-sec);
+                box-shadow: 0 0 18px rgba(0, 255, 204, 0.6);
+                white-space: nowrap;
+                z-index: 999999;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.2s ease;
+            }
+            .sys-btn:hover::after {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+        
+        /* Highlight per il tasto APP (PWA) */
+        #pwa-install-btn { color: #fff; border-color: var(--laser-sec); background: rgba(0, 255, 204, 0.1); box-shadow: 0 0 10px rgba(0,255,204,0.3); display: none; }
+        #pwa-install-btn:hover { background: var(--laser-sec); color: #000; }
+
+        .btn-back { color: var(--laser-pri); border-color: var(--laser-pri); opacity: 0; pointer-events: none; }
+        .btn-back.visible { opacity: 1; pointer-events: auto; }
+        .btn-back:hover { background: var(--laser-pri); color: var(--text-main); box-shadow: 0 0 15px var(--laser-pri); }
+
+        /* === 4. SEQUENZA DI BOOT === */
+        #screen-boot { background: #000; z-index: 9000; }
+        .title-container { position: absolute; top: 15%; display: inline-block; z-index: 5; }
+        .boot-title { font-size: clamp(2rem, 6vw, 4rem); text-transform: uppercase; font-weight: bold; text-align: center; text-shadow: 0 0 10px var(--laser-sec), 0 0 30px var(--laser-pri); clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); animation: textRevealSplash 2s ease-in-out forwards; }
+        .laser-spark { position: absolute; top: -10%; left: 0; height: 120%; width: 6px; background: #fff; border-radius: 50%; opacity: 0; z-index: 10; box-shadow: 0 0 20px 10px #fff, 0 0 40px 20px var(--laser-sec), 0 0 80px 40px var(--laser-pri); animation: sparkMove 2s ease-in-out forwards; }
+        @keyframes textRevealSplash { 0% { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); opacity: 0; } 10% { opacity: 1; } 90%, 100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: 1; } }
+        @keyframes sparkMove { 0% { left: 0%; opacity: 1; transform: scaleY(0.2); } 10% { transform: scaleY(1); } 80% { left: 100%; opacity: 1; transform: scaleY(1.2); } 90%, 100% { left: 100%; opacity: 0; transform: scaleY(0); } }
+
+        .laser-border { position: absolute; top: 4%; left: 4%; width: 92%; height: 92%; border: 2px solid transparent; border-radius: 10px; z-index: 1; opacity: 0; animation: drawBorder 1s 2s forwards; }
+        @keyframes drawBorder { to { opacity: 1; border-color: var(--laser-sec); box-shadow: inset 0 0 20px rgba(0, 255, 204, 0.2), 0 0 20px rgba(0, 255, 204, 0.2); } }
+
+        .interactive-area { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; z-index: 10; animation: fadeIn 1s 2.5s forwards; }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        .drag-instruction { color: var(--laser-sec); font-size: 1.2rem; font-weight: bold; text-shadow: 0 0 10px var(--laser-sec); margin-bottom: 20px; margin-top: 100px; animation: blink 1.5s infinite; text-transform: uppercase; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .coin-wrapper { position: relative; width: 120px; height: 120px; margin-bottom: 60px; }
+        .coin-draggable { position: absolute; inset: 0; cursor: grab; filter: drop-shadow(0 0 15px rgba(0,255,204,0.5)); touch-action: none; transform-style: preserve-3d; z-index: 30; animation: spawnCoin 1s 2.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards; }
+        .coin-draggable:active { cursor: grabbing; filter: drop-shadow(0 0 25px var(--laser-sec)); }
+        .coin-svg { width: 100%; height: 100%; pointer-events: none; }
+        @keyframes spawnCoin { 0% { transform: scale(0) rotateY(720deg); opacity: 0; } 100% { transform: scale(1) rotateY(0deg); opacity: 1; } }
+
+        .finger-guide { position: absolute; right: -30px; top: 30px; font-size: 2.5rem; pointer-events: none; z-index: 50; animation: swipeDown 2s infinite 3s; opacity: 0; }
+        @keyframes swipeDown { 0% { transform: translateY(0) rotate(-15deg); opacity: 0; } 20% { opacity: 1; } 80% { transform: translateY(120px) rotate(-15deg); opacity: 1; } 100% { transform: translateY(140px) rotate(-15deg); opacity: 0; } }
+
+        .coin-slot-container { position: relative; width: 140px; height: 30px; display: flex; justify-content: center; }
+        .coin-slot-hole { position: absolute; bottom: 5px; width: 110px; height: 10px; background: #000; border-radius: 4px; z-index: 20; box-shadow: inset 0 0 15px rgba(255,0,85,0.8); }
+        .coin-slot-front { position: absolute; bottom: 0; width: 120px; height: 8px; background: #110005; border: 2px solid var(--laser-pri); border-top: none; border-radius: 0 0 8px 8px; box-shadow: 0 5px 15px var(--laser-pri); z-index: 40; }
+        .coin-slot-front::after { content: ''; position: absolute; top: -5px; left: 10%; width: 80%; height: 5px; background: linear-gradient(90deg, transparent, var(--laser-pri), transparent); filter: blur(2px); }
+        .coin-slot-mask { position: absolute; top: 30px; left: -100px; width: 340px; height: 200px; background: var(--bg-void); z-index: 40; }
+
+        /* === 5. SCREEN GATEWAY (FIX PULSANTI E INVISIBILITÀ) === */
+        .os-title { font-size: clamp(2rem, 6vw, 4rem); text-transform: uppercase; font-weight: bold; text-align: center; text-shadow: 0 0 10px var(--laser-sec), 0 0 30px var(--laser-pri); line-height: 1.2; padding: 0 10px; }
+        .os-subtitle { font-size: clamp(0.9rem, 2vw, 1.2rem); color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin: 10px 0 40px; text-align: center; }
+        
+        .gateway-controls { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; width: 100%; max-width: 800px; padding: 0 20px; }
+        
+        .gateway-btn {
+            position: relative; z-index: 50; /* Forzato sopra ogni potenziale maschera invisibile */
+            pointer-events: auto !important;
+            flex: 1; min-width: 260px; padding: 25px 15px; font-weight: bold; text-transform: uppercase; 
+            font-size: 1.2rem; text-decoration: none; border-radius: 8px; 
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); 
+            cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
+        }
+        
+        .gateway-laser { background: rgba(255, 0, 85, 0.05); border: 2px solid var(--laser-pri); color: var(--laser-pri); box-shadow: inset 0 0 20px rgba(255,0,85,0.2), 0 0 20px rgba(255,0,85,0.1); }
+        .gateway-laser:hover, .gateway-laser:focus-visible, .gateway-laser.focus-pad { background: rgba(255, 0, 85, 0.15); box-shadow: inset 0 0 40px rgba(255,0,85,0.4), 0 0 40px rgba(255,0,85,0.4); transform: translateY(-5px) scale(1.05); }
+        .gateway-laser:active { transform: scale(0.95); }
+
+        .gateway-plasma { background: rgba(188, 19, 254, 0.05); border: 2px solid var(--plasma-pri); color: var(--plasma-pri); box-shadow: inset 0 0 20px rgba(188, 19, 254, 0.2), 0 0 20px rgba(188, 19, 254, 0.1); }
+        .gateway-plasma:hover, .gateway-plasma:focus-visible, .gateway-plasma.focus-pad { background: rgba(188, 19, 254, 0.15); box-shadow: inset 0 0 40px rgba(188, 19, 254, 0.4), 0 0 40px rgba(188, 19, 254, 0.4); transform: translateY(-5px) scale(1.05); }
+        .gateway-plasma:active { transform: scale(0.95); }
+        
+        .gateway-desc { font-size: 0.8rem; color: var(--text-dim); font-weight: normal; }
+
+        /* === 6. SLIDERS E CARDS === */
+        .section-title { font-size: 1.5rem; margin-bottom: 20px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; text-align: center; }
+        .laser-title { color: var(--laser-pri); text-shadow: 0 0 10px var(--laser-pri); border-bottom-color: rgba(255,0,85,0.3); }
+        .plasma-title { color: var(--plasma-pri); text-shadow: 0 0 10px var(--plasma-pri); border-bottom-color: rgba(188, 19, 254, 0.3); }
+
+        .slider-section { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 400px; padding: 0 20px; }
+        .slider-wrapper { position: relative; width: 100%; height: 380px; perspective: 1000px; }
+        .slider-bottom-controls { display: flex; align-items: center; justify-content: center; gap: 25px; margin-top: 25px; width: 100%; }
+        
+        .nav-btn { background: transparent; border: none; font-size: 2.5rem; font-family: monospace; cursor: pointer; padding: 5px; z-index: 20; transition: transform 0.2s, text-shadow 0.2s; display: flex; align-items: center; justify-content: center; }
+        .nav-btn:active, .nav-btn.pressed { transform: scale(0.8); }
+        .laser-btn { color: var(--laser-pri); text-shadow: 0 0 15px rgba(255,0,85,0.8); }
+        .laser-btn:hover { text-shadow: 0 0 25px var(--laser-pri); }
+        .plasma-btn { color: var(--plasma-pri); text-shadow: 0 0 15px rgba(188, 19, 254, 0.8); }
+        .plasma-btn:hover { text-shadow: 0 0 25px var(--plasma-pri); }
+
+        .slider-indicators { display: flex; justify-content: center; align-items: center; gap: 12px; }
+        .dot { width: 12px; height: 12px; background: #333; border-radius: 50%; cursor: pointer; transition: 0.3s; }
+        .laser-zone .dot.active { background: var(--laser-sec); box-shadow: 0 0 15px var(--laser-sec); transform: scale(1.3); }
+        .plasma-zone .dot.active { background: var(--plasma-sec); box-shadow: 0 0 15px var(--plasma-sec); transform: scale(1.3); }
+
+        .card-base { position: absolute; inset: 0; border-radius: 8px; padding: 30px 20px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; transform-style: preserve-3d; cursor: pointer; overflow: hidden; background: var(--bg-panel); opacity: 0; visibility: hidden; pointer-events: none; z-index: 0; transform: scale(0.9) translateZ(-60px) rotateY(15deg); transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        .card-base.active { opacity: 1; visibility: visible; pointer-events: auto; z-index: 10; transform: scale(1) translateZ(0) rotateY(0deg); }
+
+        .card-text-content { width: 100%; }
+        .card-base h2 { font-size: 1.5rem; margin-bottom: 10px; transform: translateZ(20px); z-index: 2; position: relative; text-align: center; }
+        .card-base p { font-size: 1rem; line-height: 1.6; transform: translateZ(10px); z-index: 2; position: relative; text-align: center; }
+
+        .card-laser { border: 2px solid var(--laser-sec); box-shadow: inset 0 0 30px rgba(0, 255, 204, 0.1); }
+        .card-laser h2 { color: var(--laser-sec); text-shadow: 0 0 10px rgba(0, 255, 204, 0.6); }
+        .card-plasma { border: 2px solid var(--plasma-sec); box-shadow: inset 0 0 30px rgba(252, 238, 10, 0.1); }
+        .card-plasma h2 { color: var(--plasma-sec); text-shadow: 0 0 10px rgba(252, 238, 10, 0.6); }
+
+        .card-laser::before, .card-plasma::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; animation: spinBorder 4s linear infinite; z-index: -2; }
+        .card-laser::before { background: conic-gradient(from 0deg, var(--laser-pri), var(--laser-sec), var(--laser-pri), var(--laser-sec), var(--laser-pri)); }
+        .card-plasma::before { background: conic-gradient(from 0deg, var(--plasma-pri), var(--plasma-sec), var(--plasma-pri), var(--plasma-sec), var(--plasma-pri)); }
+        .card-laser::after, .card-plasma::after { content: ''; position: absolute; inset: 4px; border-radius: 4px; z-index: -1; transition: background 0.3s; background: var(--bg-panel); }
+
+        @media (hover: hover) {
+            .card-laser.active:hover { transform: translateZ(30px) rotateX(2deg) rotateY(-2deg); border-color: var(--laser-pri); box-shadow: 0 15px 40px rgba(255,0,85,0.4); }
+            .card-plasma.active:hover { transform: translateZ(30px) rotateX(-2deg) rotateY(2deg); border-color: var(--plasma-pri); box-shadow: 0 15px 40px rgba(188, 19, 254, 0.4); }
+        }
+        .card-laser.active:active, .card-laser.active.focus-pad { transform: translateZ(30px) rotateX(2deg) rotateY(-2deg); border-color: var(--laser-pri); box-shadow: 0 15px 40px rgba(255,0,85,0.4); }
+        .card-plasma.active:active, .card-plasma.active.focus-pad { transform: translateZ(30px) rotateX(-2deg) rotateY(2deg); border-color: var(--plasma-pri); box-shadow: 0 15px 40px rgba(188, 19, 254, 0.4); }
+
+        .btn-game { padding: 15px 20px; text-align: center; font-weight: bold; text-transform: uppercase; transform: translateZ(30px); border: none; cursor: pointer; border-radius: 4px; transition: all 0.3s; position: relative; z-index: 2; font-size: 1.1rem; width: 100%; max-width: 250px; margin: 0 auto; }
+        
+        .btn-laser { background: var(--laser-pri); color: #fff; }
+        .card-laser:hover .btn-laser, .card-laser.focus-pad .btn-laser, .btn-laser:active { background: var(--laser-sec); color: #000; box-shadow: 0 0 20px var(--laser-sec); }
+        
+        .btn-plasma { background: var(--plasma-pri); color: #fff; }
+        .card-plasma:hover .btn-plasma, .card-plasma.focus-pad .btn-plasma, .btn-plasma:active { background: var(--plasma-sec); color: #000; box-shadow: 0 0 20px var(--plasma-sec); }
+        
+        .scanline-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.3; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%); background-size: 100% 4px; }
+
+        /* === 7. OVERLAY ISTRUZIONI === */
+        #instruction-overlay { position: fixed; inset: 0; background-color: rgba(5,1,10,0.85); z-index: 100000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(5px); }
+        #instruction-overlay.active { display: flex; opacity: 1; }
+
+        .modal-box { background: var(--bg-panel); border: 2px solid; border-radius: 8px; padding: 40px 30px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 0 40px rgba(0,0,0,0.9); transform: scale(0.9) translateY(20px); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        #instruction-overlay.active .modal-box { transform: scale(1) translateY(0); }
+
+        #instruction-overlay.theme-laser .modal-box { border-color: var(--laser-sec); box-shadow: 0 0 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(0, 255, 204, 0.15); }
+        #instruction-overlay.theme-plasma .modal-box { border-color: var(--plasma-sec); box-shadow: 0 0 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(252, 238, 10, 0.15); }
+
+        #instruction-overlay.theme-laser { --g1: var(--laser-sec); --g2: var(--laser-pri); --t: var(--laser-sec); }
+        #instruction-overlay.theme-plasma { --g1: var(--plasma-sec); --g2: var(--plasma-pri); --t: var(--plasma-sec); }
+        
+        .overlay-title { font-size: clamp(1.8rem, 5vw, 2.5rem); margin-bottom: 20px; color: #fff; text-shadow: 0 0 10px var(--g1), 0 0 20px var(--g2); word-break: break-word; }
+        #overlay-text { color: var(--t); font-size: 1.1rem; line-height: 1.6; margin-bottom: 35px; white-space: pre-line; text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+        .overlay-controls { display: flex; gap: 15px; justify-content: center; flex-direction: column; width: 100%; margin: 0 auto; }
+
+        .btn-close { background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 15px 20px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: inherit; transition: all 0.3s; border-radius: 4px; width: 100%; }
+        .btn-close:hover, .btn-close.focus-pad { background: #fff; color: #000; border-color: #fff; }
+        
+        @keyframes spinBorder { 100% { transform: rotate(360deg); } }
+        .privacy-note { position: absolute; bottom: 20px; width: 100%; text-align: center; color: #555; font-size: 0.8rem; pointer-events: none; padding: 0 10px; }
+
+        /* === ACCESSIBILITÀ === */
+        .sys-btn:focus-visible, .nav-btn:focus-visible, .gateway-btn:focus-visible, .card-base:focus-visible, .btn-close:focus-visible, .btn-game:focus-visible { outline: 2px solid var(--laser-sec); outline-offset: 3px; box-shadow: 0 0 0 4px rgba(0, 255, 204, 0.3); }
+
+        /* === 8. VERSIONE PC (SPECTACULAR LAYOUT) === */
+        @media (min-width: 900px) {
+            .slider-section { max-width: 900px; padding: 0; }
+            .slider-wrapper { height: 350px; }
+            .card-base { flex-direction: row; align-items: center; justify-content: space-between; padding: 40px 50px; }
+            @keyframes cardFloat { 0%, 100% { transform: scale(1) translateZ(0) translateY(0); } 50% { transform: scale(1.02) translateZ(10px) translateY(-5px); } }
+            .card-base.active { animation: cardFloat 6s ease-in-out infinite; }
+            .card-text-content { text-align: left; max-width: 60%; }
+            .card-base h2 { font-size: 2.5rem; text-align: left; margin-bottom: 20px; }
+            .card-base p { font-size: 1.2rem; text-align: left; }
+            .btn-game { width: auto; min-width: 250px; margin: 0; padding: 20px; font-size: 1.2rem; }
+            .os-title { font-size: 5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="global-crt"></div>
+
+    <div id="portrait-lock">
+        <h2>ERROR 0xP0RTR</h2>
+        <p>PLEASE ROTATE DEVICE TO PORTRAIT<br>TO INITIALIZE OS.</p>
+    </div>
+
+    <nav class="system-bar visible" id="sys-bar" aria-label="Barra di sistema" role="navigation" style="z-index: 999999; opacity: 1;">
+        <!-- HOME a sinistra -->
+        <div class="sys-group">
+            <button class="sys-btn home-btn hover-snd click-snd" id="btn-home" 
+                    onclick="navTo('screen-gateway')" data-i18n="btn_home"
+                    aria-label="Torna alla Home"
+                    data-tooltip-it="Torna alla Home / Hub principale dei progetti"
+                    data-tooltip-en="Return to Home / Main Projects Hub">◀ HOME</button>
+        </div>
+
+        <!-- Controlli a destra -->
+        <div class="sys-group">
+            <button class="sys-btn hover-snd click-snd" id="pwa-install-btn" 
+                    aria-label="Installa come App PWA"
+                    data-tooltip-it="Installa questa Web App come Progressive Web App"
+                    data-tooltip-en="Install this Web App as Progressive Web App">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>&nbsp;APP
+            </button>
+            <button class="sys-btn active hover-snd click-snd" id="audio-btn" onclick="toggleAudio()" 
+                    aria-label="Attiva/Disattiva audio" aria-pressed="true"
+                    data-tooltip-it="Attiva o disattiva l'audio di sistema"
+                    data-tooltip-en="Toggle system audio (effects + drone)">🔊</button>
+            <button class="sys-btn hover-snd click-snd" id="fs-btn" onclick="toggleFullScreen()" 
+                    aria-label="Schermo Intero"
+                    data-tooltip-it="Entra o esci dalla modalità Schermo Intero"
+                    data-tooltip-en="Enter or exit Fullscreen mode">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+            </button>
+            <button class="sys-btn active lang-btn hover-snd click-snd" onclick="setLang('it')" 
+                    aria-label="Lingua Italiana"
+                    data-tooltip-it="Cambia lingua dell'interfaccia in Italiano"
+                    data-tooltip-en="Switch interface language to Italian">IT</button>
+            <button class="sys-btn lang-btn hover-snd click-snd" onclick="setLang('en')" 
+                    aria-label="English"
+                    data-tooltip-it="Cambia lingua dell'interfaccia in Inglese"
+                    data-tooltip-en="Switch interface language to English">EN</button>
+        </div>
+    </nav>
+
+    <div id="screen-boot" class="screen active">
+        <div class="title-container">
+            <div class="laser-spark" id="splash-spark"></div>
+            <div class="boot-title" id="splash-txt">TheOldSmoke<br>Arcade1984</div>
+        </div>
+        <div class="laser-border"></div>
+        <div class="interactive-area">
+            <div class="drag-instruction" data-i18n="drag_coin" id="drag-txt">TRASCINA PER INSERIRE ⬇</div>
+            <div class="coin-wrapper">
+                <div class="finger-guide" id="finger-guide">👆</div>
+                <div class="coin-draggable hover-snd" id="drag-coin" role="button">
+                    <svg viewBox="0 0 100 100" class="coin-svg">
+                        <defs><path id="coinPathTop" d="M 15,50 a 35,35 0 1,1 70,0" /><path id="coinPathBot" d="M 85,50 a 35,35 0 1,1 -70,0" /></defs>
+                        <circle cx="50" cy="50" r="45" fill="#0a0514" stroke="#00ffcc" stroke-width="2"/>
+                        <text fill="#00ffcc" font-size="9" font-family="monospace" font-weight="bold" letter-spacing="2"><textPath href="#coinPathTop" startOffset="50%" text-anchor="middle">THE OLDSMOKE</textPath></text>
+                        <text fill="#00ffcc" font-size="9" font-family="monospace" font-weight="bold" letter-spacing="1"><textPath href="#coinPathBot" startOffset="50%" text-anchor="middle">ARCADE 1984</textPath></text>
+                        <path d="M 35,35 L 50,60 L 65,35" fill="none" stroke="#ff0055" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" filter="drop-shadow(0 0 5px #ff0055)"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="coin-slot-container" id="coin-slot">
+                <div class="coin-slot-hole"></div><div class="coin-slot-front"></div><div class="coin-slot-mask"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-gateway" class="screen">
+        <h1 class="os-title">TheOldSmoke<br>Arcade1984</h1>
+        <p class="os-subtitle" data-i18n="subtitle">Tutti i progetti</p>
+        <div class="gateway-controls">
+            <div class="gateway-btn gateway-laser hover-snd click-snd focus-pad-target" id="gate-git-btn" onclick="navTo('screen-github')" role="button" tabindex="0">
+                <span data-i18n="gate_git">/// Server Hub [GitHub]</span>
+                <span class="gateway-desc" data-i18n="gate_git_desc">12 Giochi + Moduli</span>
+            </div>
+            <div class="gateway-btn gateway-plasma hover-snd click-snd focus-pad-target" id="gate-itch-btn" onclick="navTo('screen-itch')" role="button" tabindex="0">
+                <span data-i18n="gate_itch">>_ Mirror Nodes [itch.io]</span>
+                <span class="gateway-desc" data-i18n="gate_itch_desc">Standalone & Support</span>
+            </div>
+        </div>
+        <div class="privacy-note" data-i18n="privacy_text">Privacy by Design: Nessun tracciamento. Salvataggi in locale.</div>
+    </div>
+
+    <div id="screen-github" class="screen laser-zone">
+        <h2 class="section-title laser-title" data-i18n="gate_git_title">/// Server Hub</h2>
+        <div class="slider-section">
+            <div class="slider-wrapper" id="wrap-github"></div>
+            <div class="slider-bottom-controls">
+                <button class="nav-btn laser-btn prev-btn hover-snd click-snd" aria-label="Precedente">[&lt;]</button>
+                <div class="slider-indicators" id="ind-github"></div>
+                <button class="nav-btn laser-btn next-btn hover-snd click-snd" aria-label="Successivo">[&gt;]</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen-itch" class="screen plasma-zone">
+        <h2 class="section-title plasma-title" data-i18n="gate_itch_title">>_ Mirror Nodes</h2>
+        <div class="slider-section">
+            <div class="slider-wrapper" id="wrap-itch"></div>
+            <div class="slider-bottom-controls">
+                <button class="nav-btn plasma-btn prev-btn hover-snd click-snd" aria-label="Precedente">[&lt;]</button>
+                <div class="slider-indicators" id="ind-itch"></div>
+                <button class="nav-btn plasma-btn next-btn hover-snd click-snd" aria-label="Successivo">[&gt;]</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="instruction-overlay" class="theme-laser" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal-box">
+            <h2 id="overlay-title" class="overlay-title">TITOLO</h2>
+            <div id="overlay-text">Istruzioni operative...</div>
+            <div class="overlay-controls" id="overlay-controls">
+                <a id="overlay-link" href="#" class="btn-game hover-snd click-snd focus-pad-target" data-i18n="btn_boot" style="text-decoration:none;">Avvia Sistema</a>
+                <button class="btn-close hover-snd click-snd focus-pad-target" onclick="closeOverlay()" data-i18n="btn_cancel">Annulla</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // === DATI GIOCHI ===
+        const gamesGithub = [
+            { title: "ARCADE HUB", subtitle: "Arcade Collection (12)", url: "https://theoldsmokearcade1984.github.io/TheOldSmokeArcade1984/", overlay: { it: "Sistema operativo: Attivo.\nAccesso alla libreria dei 12 titoli completi.\nControlli touch integrati.", en: "OS: Active.\nAccess to the full 12-game library.\nIntegrated touch controls." }, cardDesc: { it: "La raccolta completa con controlli touch.", en: "The complete collection with touch controls." } },
+            { title: "NULL SECTOR", subtitle: "Octacore: Null Sector", url: "https://theoldsmokearcade1984.github.io/OCTACORE-NULL_SECTOR-Advanced/", overlay: { it: "Infiltrazione tattica richiesta.\nModulo Advanced Edition attivato.", en: "Tactical infiltration required.\nAdvanced Edition module activated." }, cardDesc: { it: "Sistema di infiltrazione tattica attivato.", en: "Tactical infiltration system activated." } },
+            { title: "KNIGHT'S TOUR", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.github.io/Knigth-s_Tour/", overlay: { it: "Algoritmo logico caricato.\nMuovi il cavallo toccando tutte le caselle della scacchiera.", en: "Logic algorithm loaded.\nMove the knight touching all squares." }, cardDesc: { it: "Risolvi il classico enigma scacchistico.", en: "Solve the classic chess enigma." } },
+            { title: "NEON SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.github.io/Neon_Specter/", overlay: { it: "Azione arcade frenetica.\nObiettivo: Sfuggi al sistema.", en: "Frantic arcade action.\nObjective: Escape the system." }, cardDesc: { it: "Sfuggi ai sistemi di sicurezza nella città al neon.", en: "Escape security systems in the neon city." } }
+        ];
+
+        const gamesItch = [
+            { title: "NODE: ARCADE", subtitle: "Arcade Collection", url: "https://theoldsmokearcade1984.itch.io/theoldsmokearcade1984", overlay: { it: "Connessione remota al circuito itch.io.\nScarica la versione standalone dell'Arcade Collection.\nSupporta lo sviluppo lasciando un feedback.", en: "Remote connection to itch.io.\nDownload standalone version of the Arcade Collection.\nSupport development by leaving feedback." }, cardDesc: { it: "Eseguibile remoto scaricabile sul circuito itch.io.", en: "Remote executable available on the itch.io circuit." } },
+            { title: "NODE: PROTOCOLLO 0", subtitle: "Protocollo Zero", url: "https://theoldsmokearcade1984.itch.io/protocollo-zero-null-sector", overlay: { it: "Connessione remota al circuito itch.io.\nAccesso ai file di distribuzione del modulo Null Sector.", en: "Remote connection to itch.io.\nAccess distribution files for the Null Sector module." }, cardDesc: { it: "Scarica la versione indipendente del modulo Null Sector.", en: "Download the standalone version of the Null Sector module." } },
+            { title: "NODE: KNIGHT", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.itch.io/knights-tour", overlay: { it: "Connessione remota al circuito itch.io.\nCompeti nelle classifiche globali scaricando il pacchetto autonomo.", en: "Remote connection to itch.io.\nCompete in global leaderboards with the standalone package." }, cardDesc: { it: "Classifiche globali e pacchetti di installazione indipendenti.", en: "Global leaderboards and independent installation packages." } },
+            { title: "NODE: SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.itch.io/neonspecter", overlay: { it: "Connessione remota al circuito itch.io.\nMirror ufficiale del progetto Neon Specter per il download diretto.", en: "Remote connection to itch.io.\nOfficial mirror of the Neon Specter project for direct download." }, cardDesc: { it: "Accesso diretto alla directory di distribuzione ufficiale itch.", en: "Direct access to the official itch distribution directory." } }
+        ];
+
+        // === MOTORE AUDIO ===
+        let audioEnabled = true;
+        const snd = {
+            ctx: null, masterGain: null, droneOsc: null, droneLfo: null,
+            init() {
+                if (this.ctx) return;
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                this.masterGain = this.ctx.createGain(); this.masterGain.gain.value = 0.5; this.masterGain.connect(this.ctx.destination);
+                this.startDrone();
+            },
+            playHover() {
+                if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return;
+                const osc = this.ctx.createOscillator(); const g = this.ctx.createGain();
+                osc.type = 'sine'; osc.frequency.setValueAtTime(880, this.ctx.currentTime);
+                g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
+                osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.05);
+            },
+            playClick() {
+                if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return;
+                const osc = this.ctx.createOscillator(); const g = this.ctx.createGain();
+                osc.type = 'square'; osc.frequency.setValueAtTime(440, this.ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(55, this.ctx.currentTime + 0.2);
+                g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
+                osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.2);
+            },
+            playBoot() {
+                if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return;
+                [440, 554.37, 659.25].forEach(freq => {
+                    const osc = this.ctx.createOscillator(); const g = this.ctx.createGain();
+                    osc.type = 'sawtooth'; osc.frequency.value = freq;
+                    g.gain.setValueAtTime(0.15, this.ctx.currentTime); g.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 2.0);
+                    osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 2.0);
+                });
+            },
+            startDrone() {
+                this.droneOsc = this.ctx.createOscillator(); this.droneOsc.type = 'sawtooth'; this.droneOsc.frequency.value = 55;
+                const filter = this.ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.Q.value = 5;
+                this.droneLfo = this.ctx.createOscillator(); this.droneLfo.type = 'sine'; this.droneLfo.frequency.value = 0.5;
+                const lfoGain = this.ctx.createGain(); lfoGain.gain.value = 400;
+                this.droneLfo.connect(lfoGain); lfoGain.connect(filter.frequency);
+                const g = this.ctx.createGain(); g.gain.value = 0.05;
+                this.droneOsc.connect(filter); filter.connect(g); g.connect(this.masterGain);
+                this.droneOsc.start(); this.droneLfo.start(); filter.frequency.setValueAtTime(200, this.ctx.currentTime);
+            }
+        };
+
+        function toggleAudio() {
+            audioEnabled = !audioEnabled;
+            const btn = document.getElementById('audio-btn');
+            if (audioEnabled) {
+                btn.classList.add('active'); btn.innerText = '🔊';
+                if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0.5, snd.ctx.currentTime, 0.1);
+            } else {
+                btn.classList.remove('active'); btn.innerText = '🔇';
+                if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0, snd.ctx.currentTime, 0.1);
+            }
+        }
+
+        // === PWA LOGICA ===
+        let deferredPrompt;
+        const installBtn = document.getElementById('pwa-install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'flex';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            snd.playClick();
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') installBtn.style.display = 'none';
+                deferredPrompt = null;
+            }
+        });
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js').then(r => console.log('SW Registrato')).catch(e => console.log('SW Errore:', e));
+            });
+        }
+
+        // === DRAG MONETA ===
+        const coin = document.getElementById('drag-coin');
+        let isCoinDragging = false, startCoinY = 0, currentCoinY = 0;
+
+        function startDrag(e) {
+            isCoinDragging = true;
+            document.getElementById('finger-guide').style.display = 'none'; document.getElementById('drag-txt').style.opacity = '0.3';
+            try { snd.init(); } catch (err) {}
+            const point = e.touches ? e.touches[0] : e;
+            startCoinY = point.clientY - currentCoinY;
+            coin.style.transition = 'none'; coin.setPointerCapture(e.pointerId);
+        }
+
+        function moveDrag(e) {
+            if (!isCoinDragging) return; e.preventDefault();
+            const point = e.touches ? e.touches[0] : e;
+            currentCoinY = point.clientY - startCoinY;
+            if (currentCoinY < -50) currentCoinY = -50;
+            if (currentCoinY > 150) currentCoinY = 150;
+            coin.style.transform = `translateY(${currentCoinY}px)`;
+        }
+
+        function endDrag(e) {
+            if (!isCoinDragging) return; isCoinDragging = false;
+            try { coin.releasePointerCapture(e.pointerId); } catch (_) {}
+            
+            if (currentCoinY > 60) {
+                coin.style.transition = 'all 0.5s ease-in';
+                coin.style.transform = `translateY(${currentCoinY + 100}px) scale(0.5) rotateX(60deg)`;
+                coin.style.opacity = '0'; snd.playClick();
+                setTimeout(bootSystem, 600);
+            } else {
+                document.getElementById('drag-txt').style.opacity = '1';
+                coin.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                currentCoinY = 0; coin.style.transform = 'translateY(0px)';
+            }
+        }
+
+        coin.addEventListener('pointerdown', startDrag); window.addEventListener('pointermove', moveDrag);
+        window.addEventListener('pointerup', endDrag); window.addEventListener('pointercancel', endDrag);
+
+        function bootSystem() {
+            snd.playBoot(); navTo('screen-gateway');
+            setTimeout(() => document.getElementById('sys-bar').classList.add('visible'), 800);
+        }
+
+        // === NAVIGAZIONE OS (FIX VISIBILITY ANTI-BUG) ===
+        function navTo(screenId) {
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.remove('active');
+                // Dopo la transizione opacità, rimuove fisicamente lo schermo per impedire click fantasma
+                setTimeout(() => { if(!s.classList.contains('active')) s.style.visibility = 'hidden'; }, 800);
+            });
+            
+            const targetScreen = document.getElementById(screenId);
+            targetScreen.style.visibility = 'visible';
+            targetScreen.classList.add('active');
+            
+            const backBtn = document.getElementById('btn-back');
+            if (screenId === 'screen-github' || screenId === 'screen-itch') backBtn.classList.add('visible');
+            else backBtn.classList.remove('visible');
+
+            padSelectionIndex = 0; updatePadFocus();
+        }
+
+        // === COSTRUZIONE SLIDER ===
+        function buildSlider(containerId, data, isPlasma) {
+            const wrap = document.getElementById(containerId);
+            const themeClass = isPlasma ? 'card-plasma' : 'card-laser';
+            const btnClass = isPlasma ? 'btn-plasma' : 'btn-laser';
+            
+            data.forEach((game, i) => {
+                const activeClass = i === 0 ? 'active' : '';
+                const scanline = isPlasma ? '<div class="scanline-overlay"></div>' : '';
+                const html = `
+                    <div class="card-base ${themeClass} game-link ${activeClass} hover-snd click-snd" 
+                         data-url="${game.url}" data-external="${isPlasma}"
+                         data-overlay-it="${game.overlay.it}" data-overlay-en="${game.overlay.en}" role="button" tabindex="0">
+                        ${scanline}
+                        <div class="card-text-content">
+                            <h2>${game.subtitle}</h2>
+                            <p data-i18n-dyn-card-it="${game.cardDesc.it}" data-i18n-dyn-card-en="${game.cardDesc.en}">${game.cardDesc.it}</p>
+                        </div>
+                        <div class="btn-game ${btnClass}" data-i18n="btn_init">${isPlasma ? 'Connetti' : 'Inizializza'}</div>
+                    </div>`;
+                wrap.insertAdjacentHTML('beforeend', html);
+            });
+        }
+        buildSlider('wrap-github', gamesGithub, false); buildSlider('wrap-itch', gamesItch, true);
+
+        // === LOGICA SLIDER ===
+        let globalIsSwiping = false;
+        function setupSliderLogic(sectionId, indId) {
+            const section = document.getElementById(sectionId);
+            const cards = section.querySelectorAll('.card-base');
+            const prevBtn = section.querySelector('.prev-btn');
+            const nextBtn = section.querySelector('.next-btn');
+            const dotsContainer = document.getElementById(indId);
+            let currentIndex = 0;
+
+            cards.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot hover-snd' + (i === 0 ? ' active' : '');
+                dot.addEventListener('click', () => { snd.playClick(); goToSlide(i); });
+                dotsContainer.appendChild(dot);
+            });
+            const dots = dotsContainer.querySelectorAll('.dot');
+
+            function goToSlide(index) {
+                cards[currentIndex].classList.remove('active'); dots[currentIndex].classList.remove('active');
+                currentIndex = index;
+                cards[currentIndex].classList.add('active'); dots[currentIndex].classList.add('active');
+            }
+
+            prevBtn.addEventListener('click', () => { snd.playClick(); goToSlide(currentIndex === 0 ? cards.length - 1 : currentIndex - 1); });
+            nextBtn.addEventListener('click', () => { snd.playClick(); goToSlide(currentIndex === cards.length - 1 ? 0 : currentIndex + 1); });
+
+            let startX = 0, startY = 0;
+            const track = section.querySelector('.slider-wrapper');
+            track.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; startY = e.changedTouches[0].screenY; globalIsSwiping = false; }, { passive: true });
+            track.addEventListener('touchmove', () => { globalIsSwiping = true; }, { passive: true });
+            track.addEventListener('touchend', e => {
+                if (!globalIsSwiping) return;
+                const dx = e.changedTouches[0].screenX - startX, dy = e.changedTouches[0].screenY - startY;
+                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) nextBtn.click(); else prevBtn.click(); }
+                setTimeout(() => { globalIsSwiping = false; }, 80);
+            }, { passive: true });
+        }
+        setupSliderLogic('screen-github', 'ind-github'); setupSliderLogic('screen-itch', 'ind-itch');
+
+        // === OVERLAY EVENTI ===
+        const overlay = document.getElementById('instruction-overlay');
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('.game-link');
+            if (!link) return;
+            e.preventDefault(); if (globalIsSwiping) return;
+            
+            snd.playClick();
+            const url = link.getAttribute('data-url');
+            const isPlasma = link.classList.contains('card-plasma');
+            
+            overlay.className = isPlasma ? 'theme-plasma' : 'theme-laser';
+            document.getElementById('overlay-link').className = 'btn-game hover-snd click-snd focus-pad-target ' + (isPlasma ? 'btn-plasma' : 'btn-laser');
+            document.getElementById('overlay-link').innerText = isPlasma ? (currentLang === 'it' ? 'CONNETTI' : 'CONNECT') : (currentLang === 'it' ? 'AVVIA SISTEMA' : 'BOOT SYSTEM');
+            document.getElementById('overlay-title').textContent = link.querySelector('h2').textContent;
+            document.getElementById('overlay-text').textContent = currentLang === 'it' ? link.getAttribute('data-overlay-it') : link.getAttribute('data-overlay-en');
+            document.getElementById('overlay-link').href = url;
+
+            if (link.getAttribute('data-external') === 'true') document.getElementById('overlay-link').setAttribute('target', '_blank');
+            else document.getElementById('overlay-link').removeAttribute('target');
+
+            document.body.classList.add('modal-open'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.add('active');
+        });
+
+        function closeOverlay() {
+            snd.playClick(); overlay.classList.remove('active'); overlay.setAttribute('aria-hidden', 'true'); document.body.classList.remove('modal-open');
+        }
+
+        // === MULTILINGUA ===
+        const translations = {
+            it: { subtitle: "Tutti i progetti", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "TRASCINA PER INSERIRE ⬇", gate_git_desc: "12 Giochi + Moduli", gate_itch_desc: "Standalone & Support", btn_init: "Inizializza", btn_cancel: "Annulla", btn_boot: "Avvia Sistema", btn_back: "◀ RIT.", privacy_text: "Privacy by Design: Nessun tracciamento. Salvataggi in locale." },
+            en: { subtitle: "All Projects", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "DRAG TO INSERT ⬇", gate_git_desc: "12 Games + Modules", gate_itch_desc: "Standalone & Support", btn_init: "Initialize", btn_cancel: "Cancel", btn_boot: "Boot System", btn_back: "◀ BACK", privacy_text: "Privacy by Design: No tracking. Local saves only." }
+        };
+        let currentLang = 'it';
+
+        function setLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.innerText.toLowerCase() === lang));
+            document.querySelectorAll('[data-i18n]').forEach(el => { if (translations[lang][el.getAttribute('data-i18n')]) el.innerText = translations[lang][el.getAttribute('data-i18n')]; });
+            document.querySelectorAll('p[data-i18n-dyn-card-it]').forEach(p => { const t = p.getAttribute('data-i18n-dyn-card-' + lang); if (t) p.innerText = t; });
+
+            // Aggiorna tooltip su tutti i pulsanti della barra
+            document.querySelectorAll('#sys-bar .sys-btn').forEach(btn => {
+                const text = lang === 'it' ? btn.getAttribute('data-tooltip-it') : btn.getAttribute('data-tooltip-en');
+                if (text) btn.setAttribute('data-tooltip', text);
+            });
+        }
+
+        // === FULLSCREEN ===
+        function toggleFullScreen() {
+            const btn = document.getElementById('fs-btn');
+            const doc = document.documentElement;
+            if (!document.fullscreenElement) { 
+                if (doc.requestFullscreen) doc.requestFullscreen().then(() => btn.classList.add('active')).catch(()=>{}); 
+            } else { 
+                if (document.exitFullscreen) { document.exitFullscreen(); btn.classList.remove('active'); }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.addEventListener('mouseover', e => { if (e.target.closest('.hover-snd')) snd.playHover(); });
+            document.addEventListener('mousedown', e => { if (e.target.closest('.click-snd')) snd.playClick(); });
+
+            // Inizializza tooltip in italiano all'avvio
+            setTimeout(() => {
+                document.querySelectorAll('#sys-bar .sys-btn').forEach(btn => {
+                    const it = btn.getAttribute('data-tooltip-it');
+                    if (it) btn.setAttribute('data-tooltip', it);
+                });
+            }, 120);
+        });
+    </script>
+</body>
+</html>
