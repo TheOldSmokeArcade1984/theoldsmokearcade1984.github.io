@@ -59,16 +59,6 @@
         }
         @keyframes crtFlicker { 0% { opacity: 0.97; } 50% { opacity: 1; } 100% { opacity: 0.97; } }
 
-        /* OVERLAY PORTRAIT LOCK (Mobile) */
-        #portrait-lock {
-            display: none; position: fixed; inset: 0; background: var(--bg-void); z-index: 999999;
-            color: var(--laser-pri); flex-direction: column; justify-content: center; align-items: center;
-            text-align: center; padding: 20px;
-        }
-        #portrait-lock h2 { font-size: 2rem; text-transform: uppercase; text-shadow: 0 0 20px var(--laser-pri); animation: blink 1.5s infinite; }
-        #portrait-lock p { color: var(--laser-sec); margin-top: 15px; font-size: 1.2rem; text-shadow: 0 0 10px var(--laser-sec); }
-        @media (orientation: landscape) and (max-height: 600px) and (hover: none) { #portrait-lock { display: flex; } }
-
         /* === 2. GESTIONE STANZE (SCREENS) === */
         .screen {
             position: absolute; inset: 0; display: flex; flex-direction: column; 
@@ -291,16 +281,33 @@
             .btn-game { width: auto; min-width: 250px; margin: 0; padding: 20px; font-size: 1.2rem; }
             .os-title { font-size: 5rem; }
         }
+
+        /* === 9. OTTIMIZZAZIONE LANDSCAPE === */
+        /* Questa regola si attiva rigorosamente SOLO se lo schermo è fisicamente orientato in orizzontale */
+        @media (orientation: landscape) and (max-height: 600px) and (hover: none) {
+            .screen { justify-content: flex-start; overflow-y: auto; overflow-x: hidden; padding-top: 75px; padding-bottom: 50px; }
+            .os-title { font-size: clamp(2.5rem, 5vh, 3.5rem); margin-top: 15px; }
+            .os-subtitle { font-size: 1.1rem; margin-bottom: 30px; }
+            .gateway-controls { flex-direction: row; gap: 20px; padding: 0 20px; }
+            .gateway-btn { padding: 20px 15px; min-width: 220px; }
+            .section-title { font-size: 1.4rem; margin-bottom: 20px; }
+            .slider-wrapper { height: 280px; }
+            .card-base { padding: 20px 25px; flex-direction: row; gap: 20px; align-items: center; justify-content: space-between; }
+            .card-text-content { text-align: left; max-width: 65%; }
+            .card-base h2 { font-size: 1.5rem; margin-bottom: 10px; transform: translateZ(20px); }
+            .card-base p { font-size: 1.1rem; line-height: 1.5; transform: translateZ(10px); }
+            .btn-game { padding: 15px; font-size: 1.1rem; min-width: 160px; margin: 0; transform: translateZ(30px); }
+            .slider-bottom-controls { margin-top: 25px; margin-bottom: 30px; }
+            .interactive-area { justify-content: flex-start; padding-top: 90px; }
+            .drag-instruction { font-size: 1.3rem; margin-bottom: 20px; }
+            .coin-wrapper { width: 110px; height: 110px; margin-bottom: 40px; }
+            .finger-guide { right: -40px; top: 10px; transform: scale(0.8); }
+        }
     </style>
 </head>
 <body>
 
     <div class="global-crt"></div>
-
-    <div id="portrait-lock">
-        <h2>ERROR 0xP0RTR</h2>
-        <p>PLEASE ROTATE DEVICE TO PORTRAIT<br>TO INITIALIZE OS.</p>
-    </div>
 
     <nav class="system-bar visible" id="sys-bar" aria-label="Barra di sistema" role="navigation" style="z-index: 999999; opacity: 1;">
         <!-- HOME a sinistra -->
@@ -421,17 +428,17 @@
     <script>
         // === DATI GIOCHI ===
         const gamesGithub = [
-            { title: "ARCADE HUB", subtitle: "Arcade Collection (12)", url: "https://theoldsmokearcade1984.github.io/TheTwelveClassicGameTheOldSmokeArcade1984/", overlay: { it: "Sistema operativo: Attivo.\nAccesso alla libreria dei 12 titoli completi.\nControlli touch integrati.", en: "OS: Active.\nAccess to the full 12-game library.\nIntegrated touch controls." }, cardDesc: { it: "La raccolta completa con controlli touch.", en: "The complete collection with touch controls." } },
-            { title: "NULL SECTOR", subtitle: "Octacore: Null Sector", url: "https://theoldsmokearcade1984.github.io/OCTACORE-NULL_SECTOR-Advanced/", overlay: { it: "Infiltrazione tattica richiesta.\nModulo Advanced Edition attivato.", en: "Tactical infiltration required.\nAdvanced Edition module activated." }, cardDesc: { it: "Sistema di infiltrazione tattica attivato.", en: "Tactical infiltration system activated." } },
-            { title: "KNIGHT'S TOUR", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.github.io/Knigth-s_Tour/", overlay: { it: "Algoritmo logico caricato.\nMuovi il cavallo toccando tutte le caselle della scacchiera.", en: "Logic algorithm loaded.\nMove the knight touching all squares." }, cardDesc: { it: "Risolvi il classico enigma scacchistico.", en: "Solve the classic chess enigma." } },
-            { title: "NEON SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.github.io/Neon_Specter/", overlay: { it: "Azione arcade frenetica.\nObiettivo: Sfuggi al sistema.", en: "Frantic arcade action.\nObjective: Escape the system." }, cardDesc: { it: "Sfuggi ai sistemi di sicurezza nella città al neon.", en: "Escape security systems in the neon city." } }
+            { title: "ARCADE HUB", subtitle: "Arcade Collection (12)", url: "https://theoldsmokearcade1984.github.io/TheOldSmokeArcade1984/", overlay: { it: "Sistema operativo: Attivo.\\nAccesso alla libreria dei 12 titoli completi.\\nControlli touch integrati.", en: "OS: Active.\\nAccess to the full 12-game library.\\nIntegrated touch controls." }, cardDesc: { it: "La raccolta completa con controlli touch.", en: "The complete collection with touch controls." } },
+            { title: "NULL SECTOR", subtitle: "Octacore: Null Sector", url: "https://theoldsmokearcade1984.github.io/OCTACORE-NULL_SECTOR-Advanced/", overlay: { it: "Infiltrazione tattica richiesta.\\nModulo Advanced Edition attivato.", en: "Tactical infiltration required.\\nAdvanced Edition module activated." }, cardDesc: { it: "Sistema di infiltrazione tattica attivato.", en: "Tactical infiltration system activated." } },
+            { title: "KNIGHT'S TOUR", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.github.io/Knigth-s_Tour/", overlay: { it: "Algoritmo logico caricato.\\nMuovi il cavallo toccando tutte le caselle della scacchiera.", en: "Logic algorithm loaded.\\nMove the knight touching all squares." }, cardDesc: { it: "Risolvi il classico enigma scacchistico.", en: "Solve the classic chess enigma." } },
+            { title: "NEON SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.github.io/Neon_Specter/", overlay: { it: "Azione arcade frenetica.\\nObiettivo: Sfuggi al sistema.", en: "Frantic arcade action.\\nObjective: Escape the system." }, cardDesc: { it: "Sfuggi ai sistemi di sicurezza nella città al neon.", en: "Escape security systems in the neon city." } }
         ];
 
         const gamesItch = [
-            { title: "NODE: ARCADE", subtitle: "Arcade Collection", url: "https://theoldsmokearcade1984.itch.io/theoldsmokearcade1984", overlay: { it: "Connessione remota al circuito itch.io.\nScarica la versione standalone dell'Arcade Collection.\nSupporta lo sviluppo lasciando un feedback.", en: "Remote connection to itch.io.\nDownload standalone version of the Arcade Collection.\nSupport development by leaving feedback." }, cardDesc: { it: "Eseguibile remoto scaricabile sul circuito itch.io.", en: "Remote executable available on the itch.io circuit." } },
-            { title: "NODE: PROTOCOLLO 0", subtitle: "Protocollo Zero", url: "https://theoldsmokearcade1984.itch.io/protocollo-zero-null-sector", overlay: { it: "Connessione remota al circuito itch.io.\nAccesso ai file di distribuzione del modulo Null Sector.", en: "Remote connection to itch.io.\nAccess distribution files for the Null Sector module." }, cardDesc: { it: "Scarica la versione indipendente del modulo Null Sector.", en: "Download the standalone version of the Null Sector module." } },
-            { title: "NODE: KNIGHT", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.itch.io/knights-tour", overlay: { it: "Connessione remota al circuito itch.io.\nCompeti nelle classifiche globali scaricando il pacchetto autonomo.", en: "Remote connection to itch.io.\nCompete in global leaderboards with the standalone package." }, cardDesc: { it: "Classifiche globali e pacchetti di installazione indipendenti.", en: "Global leaderboards and independent installation packages." } },
-            { title: "NODE: SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.itch.io/neonspecter", overlay: { it: "Connessione remota al circuito itch.io.\nMirror ufficiale del progetto Neon Specter per il download diretto.", en: "Remote connection to itch.io.\nOfficial mirror of the Neon Specter project for direct download." }, cardDesc: { it: "Accesso diretto alla directory di distribuzione ufficiale itch.", en: "Direct access to the official itch distribution directory." } }
+            { title: "NODE: ARCADE", subtitle: "Arcade Collection", url: "https://theoldsmokearcade1984.itch.io/theoldsmokearcade1984", overlay: { it: "Connessione remota al circuito itch.io.\\nScarica la versione standalone dell'Arcade Collection.\\nSupporta lo sviluppo lasciando un feedback.", en: "Remote connection to itch.io.\\nDownload standalone version of the Arcade Collection.\\nSupport development by leaving feedback." }, cardDesc: { it: "Eseguibile remoto scaricabile sul circuito itch.io.", en: "Remote executable available on the itch.io circuit." } },
+            { title: "NODE: PROTOCOLLO 0", subtitle: "Protocollo Zero", url: "https://theoldsmokearcade1984.itch.io/protocollo-zero-null-sector", overlay: { it: "Connessione remota al circuito itch.io.\\nAccesso ai file di distribuzione del modulo Null Sector.", en: "Remote connection to itch.io.\\nAccess distribution files for the Null Sector module." }, cardDesc: { it: "Scarica la versione indipendente del modulo Null Sector.", en: "Download the standalone version of the Null Sector module." } },
+            { title: "NODE: KNIGHT", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.itch.io/knights-tour", overlay: { it: "Connessione remota al circuito itch.io.\\nCompeti nelle classifiche globali scaricando il pacchetto autonomo.", en: "Remote connection to itch.io.\\nCompete in global leaderboards with the standalone package." }, cardDesc: { it: "Classifiche globali e pacchetti di installazione indipendenti.", en: "Global leaderboards and independent installation packages." } },
+            { title: "NODE: SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.itch.io/neonspecter", overlay: { it: "Connessione remota al circuito itch.io.\\nMirror ufficiale del progetto Neon Specter per il download diretto.", en: "Remote connection to itch.io.\\nOfficial mirror of the Neon Specter project for direct download." }, cardDesc: { it: "Accesso diretto alla directory di distribuzione ufficiale itch.", en: "Direct access to the official itch distribution directory." } }
         ];
 
         // === MOTORE AUDIO ===
