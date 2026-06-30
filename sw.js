@@ -1,4 +1,4 @@
-const CACHE_NAME = 'arcade-os-v8';
+const CACHE_NAME = 'arcade-os-v9';
 const urlsToCache = [
   './index.html',
   './index.html?v=landscape',

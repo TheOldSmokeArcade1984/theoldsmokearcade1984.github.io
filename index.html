@@ -8,6 +8,7 @@
     <meta name="description" content="Hub ufficiale di TheOldSmokeArcade1984. Sviluppo indipendente di giochi retro arcade e cyberpunk.">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2305010a'/><path d='M32 8 L56 32 L32 56 L8 32 Z' fill='none' stroke='%2300ffcc' stroke-width='4'/><circle cx='32' cy='32' r='8' fill='%23ff0055' filter='drop-shadow(0 0 5px %23ff0055)'/></svg>" type="image/svg+xml">
 
+    <!-- === PWA MANIFEST & MOBILE SUPPORT === -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#05010a">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -282,6 +283,7 @@
         }
 
         /* === 9. OTTIMIZZAZIONE LANDSCAPE === */
+        /* Questa regola si attiva rigorosamente SOLO se lo schermo è fisicamente orientato in orizzontale */
         @media (orientation: landscape) and (max-height: 600px) and (hover: none) {
             .screen { justify-content: flex-start; overflow-y: auto; overflow-x: hidden; padding-top: 75px; padding-bottom: 50px; }
             .os-title { font-size: clamp(2.5rem, 5vh, 3.5rem); margin-top: 15px; }
@@ -308,6 +310,7 @@
     <div class="global-crt"></div>
 
     <nav class="system-bar visible" id="sys-bar" aria-label="Barra di sistema" role="navigation" style="z-index: 999999; opacity: 1;">
+        <!-- HOME a sinistra -->
         <div class="sys-group">
             <button class="sys-btn home-btn hover-snd click-snd" id="btn-home" 
                     onclick="navTo('screen-gateway')" data-i18n="btn_home"
@@ -316,6 +319,7 @@
                     data-tooltip-en="Return to Home / Main Projects Hub">◀ HOME</button>
         </div>
 
+        <!-- Controlli a destra -->
         <div class="sys-group">
             <button class="sys-btn hover-snd click-snd" id="pwa-install-btn" 
                     aria-label="Installa come App PWA"
