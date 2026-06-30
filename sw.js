@@ -1,6 +1,7 @@
-const CACHE_NAME = 'arcade-os-v7';
+const CACHE_NAME = 'arcade-os-v8';
 const urlsToCache = [
   './index.html',
+  './index.html?v=landscape',
   './manifest.json'
 ];
 

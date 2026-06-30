@@ -1,8 +1,8 @@
 {
   "name": "TheOldSmokeArcade1984 OS",
-  "short_name": "ArcadeOS V2",
+  "short_name": "ArcadeOS L",
   "description": "Hub ufficiale di sviluppo indipendente retro arcade.",
-  "start_url": "./index.html",
+  "start_url": "./index.html?v=landscape",
   "display": "fullscreen",
   "background_color": "#030305",
   "theme_color": "#030305",
