@@ -5,9 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TheOldSmokeArcade1984 - OS</title>
     
-    <meta name="description" content="Hub ufficiale di TheOldSmokeArcade1984. Sviluppo indipendente di giochi retro arcade e cyberpunk.">
+    <!-- === SEO & AI DISCOVERY METADATA === -->
+    <meta name="description" content="Hub ufficiale di TheOldSmokeArcade1984. Sistema operativo virtuale e collezione indipendente di giochi retro arcade e cyberpunk.">
+    <meta name="keywords" content="giochi indie, retro arcade, cyberpunk, synthwave, pwa, giochi browser, theoldsmokearcade1984">
+    <meta name="author" content="TheOldSmokeArcade1984">
+    <meta name="robots" content="index, follow">
+
+    <!-- === OPEN GRAPH (Anteprime Social: WhatsApp, Telegram, Facebook, X) === -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="TheOldSmokeArcade1984 - OS">
+    <meta property="og:description" content="Entra nel terminale. La collezione indipendente di giochi retro arcade e cyberpunk. Gioca da browser o installa l'App.">
+    <meta property="og:url" content="https://theoldsmokearcade1984.github.io/">
+    <!-- <meta property="og:image" content="https://theoldsmokearcade1984.github.io/tuo-banner.png"> Scommenta e aggiungi un link a un'immagine per avere l'anteprima visiva -->
+
+    <!-- === JSON-LD (Dati Strutturati per i Motori AI e Google) === -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "TheOldSmokeArcade1984 OS",
+      "operatingSystem": "Web, Android, iOS, Windows",
+      "applicationCategory": "GameApplication",
+      "genre": ["Arcade", "Retro", "Cyberpunk", "Synthwave", "Indie"],
+      "description": "Un hub centralizzato a forma di sistema operativo retro per lanciare e scaricare una libreria di 12 videogiochi e moduli indipendenti con privacy by design.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "TheOldSmokeArcade1984",
+        "url": "https://theoldsmokearcade1984.github.io/"
+      }
+    }
+    </script>
+
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2305010a'/><path d='M32 8 L56 32 L32 56 L8 32 Z' fill='none' stroke='%2300ffcc' stroke-width='4'/><circle cx='32' cy='32' r='8' fill='%23ff0055' filter='drop-shadow(0 0 5px %23ff0055)'/></svg>" type="image/svg+xml">
 
+    <!-- === PWA MANIFEST & MOBILE SUPPORT === -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#05010a">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -34,7 +70,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
         
         html, body {
-            width: 100vw; height: 100vh;
+            width: 100vw; height: 100vh; height: 100dvh;
             background-color: var(--bg-void); color: var(--text-main);
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden; perspective: 1200px;
@@ -93,32 +129,15 @@
 
         /* Tooltip personalizzati neon */
         @media (hover: hover) and (pointer: fine) {
-            .sys-btn {
-                position: relative;
-            }
+            .sys-btn { position: relative; }
             .sys-btn::after {
-                content: attr(data-tooltip);
-                position: absolute;
-                top: calc(100% + 10px);
-                left: 50%;
-                transform: translateX(-50%) translateY(8px);
-                background: rgba(5, 1, 10, 0.97);
-                color: #fff;
-                font-size: 0.72rem;
-                padding: 8px 13px;
-                border-radius: 5px;
-                border: 1px solid var(--laser-sec);
-                box-shadow: 0 0 18px rgba(0, 255, 204, 0.6);
-                white-space: nowrap;
-                z-index: 999999;
-                opacity: 0;
-                pointer-events: none;
-                transition: all 0.2s ease;
+                content: attr(data-tooltip); position: absolute; top: calc(100% + 10px); left: 50%;
+                transform: translateX(-50%) translateY(8px); background: rgba(5, 1, 10, 0.97); color: #fff;
+                font-size: 0.72rem; padding: 8px 13px; border-radius: 5px; border: 1px solid var(--laser-sec);
+                box-shadow: 0 0 18px rgba(0, 255, 204, 0.6); white-space: nowrap; z-index: 999999;
+                opacity: 0; pointer-events: none; transition: all 0.2s ease;
             }
-            .sys-btn:hover::after {
-                opacity: 1;
-                transform: translateX(-50%) translateY(0);
-            }
+            .sys-btn:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
         }
         
         /* Highlight per il tasto APP (PWA) */
@@ -281,26 +300,51 @@
             .os-title { font-size: 5rem; }
         }
 
-        /* === 9. OTTIMIZZAZIONE LANDSCAPE === */
-        @media (orientation: landscape) and (max-height: 600px) and (hover: none) {
-            .screen { justify-content: flex-start; overflow-y: auto; overflow-x: hidden; padding-top: 75px; padding-bottom: 50px; }
-            .os-title { font-size: clamp(2.5rem, 5vh, 3.5rem); margin-top: 15px; }
-            .os-subtitle { font-size: 1.1rem; margin-bottom: 30px; }
-            .gateway-controls { flex-direction: row; gap: 20px; padding: 0 20px; }
-            .gateway-btn { padding: 20px 15px; min-width: 220px; }
-            .section-title { font-size: 1.4rem; margin-bottom: 20px; }
-            .slider-wrapper { height: 280px; }
-            .card-base { padding: 20px 25px; flex-direction: row; gap: 20px; align-items: center; justify-content: space-between; }
-            .card-text-content { text-align: left; max-width: 65%; }
-            .card-base h2 { font-size: 1.5rem; margin-bottom: 10px; transform: translateZ(20px); }
-            .card-base p { font-size: 1.1rem; line-height: 1.5; transform: translateZ(10px); }
-            .btn-game { padding: 15px; font-size: 1.1rem; min-width: 160px; margin: 0; transform: translateZ(30px); }
-            .slider-bottom-controls { margin-top: 25px; margin-bottom: 30px; }
-            .interactive-area { justify-content: flex-start; padding-top: 90px; }
-            .drag-instruction { font-size: 1.3rem; margin-bottom: 20px; }
-            .coin-wrapper { width: 110px; height: 110px; margin-bottom: 40px; }
-            .finger-guide { right: -40px; top: 10px; transform: scale(0.8); }
+        /* === 9. OTTIMIZZAZIONE LANDSCAPE (RISOLUZIONE TAGLIO) === */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .screen { 
+                display: block !important; 
+                overflow-y: auto !important; 
+                overflow-x: hidden !important; 
+                padding-top: 80px !important; 
+                padding-bottom: 60px !important; 
+                text-align: center;
+                -webkit-overflow-scrolling: touch;
+            }
+            #screen-game { display: flex !important; overflow: hidden !important; padding: 0 !important; }
+            .title-container { position: relative; top: 0; margin-top: 10px; width: 100%; display: flex; justify-content: center; }
+            .interactive-area { position: relative; padding-top: 30px; }
+            .laser-border { display: none; }
+            .os-title { font-size: clamp(2rem, 5vh, 3rem); margin-top: 10px; }
+            .os-subtitle { font-size: 1rem; margin-bottom: 20px; }
+            .gateway-controls { flex-direction: row; gap: 15px; padding: 0 15px; margin: 0 auto; max-width: 600px; display: flex; }
+            .gateway-btn { padding: 15px 10px; min-width: 200px; }
+            .privacy-note { position: relative; bottom: auto; margin-top: 40px; padding-bottom: 20px; }
+            .slider-section { margin: 0 auto; }
+            .section-title { font-size: 1.2rem; margin-bottom: 15px; margin-top: 10px; }
+            .slider-wrapper { height: 260px; }
+            .card-base { padding: 15px 20px; flex-direction: row; gap: 15px; align-items: center; justify-content: space-between; }
+            .card-text-content { text-align: left; max-width: 60%; }
+            .card-base h2 { font-size: 1.3rem; margin-bottom: 8px; transform: translateZ(20px); }
+            .card-base p { font-size: 0.95rem; line-height: 1.4; transform: translateZ(10px); }
+            .btn-game { padding: 12px; font-size: 1rem; min-width: 140px; margin: 0; transform: translateZ(30px); }
+            .slider-bottom-controls { margin-top: 15px; margin-bottom: 20px; }
+            .drag-instruction { font-size: 1.1rem; margin-top: 0; margin-bottom: 15px; }
+            .coin-wrapper { width: 90px; height: 90px; margin-bottom: 30px; margin-left: auto; margin-right: auto; }
+            .finger-guide { right: -30px; top: 10px; transform: scale(0.7); }
         }
+
+        /* === 10. GAME IFRAME === */
+        #screen-game { background: #000; z-index: 90000; padding: 0 !important; }
+        #game-frame { width: 100vw; height: 100vh; height: 100dvh; border: none; background: #000; }
+        .btn-exit-game {
+            position: absolute; top: 15px; left: 15px; z-index: 999999;
+            background: rgba(5, 1, 10, 0.85); border: 2px solid var(--laser-pri); color: var(--laser-pri);
+            padding: 10px 15px; font-size: 0.9rem; font-weight: bold; font-family: inherit; border-radius: 8px;
+            cursor: pointer; text-transform: uppercase; backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(255,0,85,0.4); transition: all 0.3s;
+        }
+        .btn-exit-game:hover, .btn-exit-game:active { background: var(--laser-pri); color: #fff; transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -410,12 +454,18 @@
         </div>
     </div>
 
+    <!-- NUOVA SCHERMATA: GAME IFRAME -->
+    <div id="screen-game" class="screen">
+        <iframe id="game-frame" src="" allowfullscreen></iframe>
+        <button class="btn-exit-game hover-snd click-snd" onclick="exitGame()" data-i18n="btn_exit_game">◀ CHIUDI GIOCO</button>
+    </div>
+
     <div id="instruction-overlay" class="theme-laser" aria-hidden="true" role="dialog" aria-modal="true">
         <div class="modal-box">
             <h2 id="overlay-title" class="overlay-title">TITOLO</h2>
             <div id="overlay-text">Istruzioni operative...</div>
             <div class="overlay-controls" id="overlay-controls">
-                <a id="overlay-link" href="#" class="btn-game hover-snd click-snd focus-pad-target" data-i18n="btn_boot" style="text-decoration:none;">Avvia Sistema</a>
+                <button id="overlay-link" class="btn-game hover-snd click-snd focus-pad-target" data-i18n="btn_boot">Avvia Sistema</button>
                 <button class="btn-close hover-snd click-snd focus-pad-target" onclick="closeOverlay()" data-i18n="btn_cancel">Annulla</button>
             </div>
         </div>
@@ -648,7 +698,7 @@
         }
         setupSliderLogic('screen-github', 'ind-github'); setupSliderLogic('screen-itch', 'ind-itch');
 
-        // === OVERLAY EVENTI ===
+        // === OVERLAY EVENTI E INIEZIONE GIOCO IN IFRAME ===
         const overlay = document.getElementById('instruction-overlay');
         document.addEventListener('click', function(e) {
             const link = e.target.closest('.game-link');
@@ -660,14 +710,15 @@
             const isPlasma = link.classList.contains('card-plasma');
             
             overlay.className = isPlasma ? 'theme-plasma' : 'theme-laser';
-            document.getElementById('overlay-link').className = 'btn-game hover-snd click-snd focus-pad-target ' + (isPlasma ? 'btn-plasma' : 'btn-laser');
-            document.getElementById('overlay-link').innerText = isPlasma ? (currentLang === 'it' ? 'CONNETTI' : 'CONNECT') : (currentLang === 'it' ? 'AVVIA SISTEMA' : 'BOOT SYSTEM');
+            
+            const btnBoot = document.getElementById('overlay-link');
+            btnBoot.className = 'btn-game hover-snd click-snd focus-pad-target ' + (isPlasma ? 'btn-plasma' : 'btn-laser');
+            btnBoot.innerText = isPlasma ? (currentLang === 'it' ? 'CONNETTI' : 'CONNECT') : (currentLang === 'it' ? 'AVVIA SISTEMA' : 'BOOT SYSTEM');
+            
+            btnBoot.setAttribute('data-target-url', url);
+            
             document.getElementById('overlay-title').textContent = link.querySelector('h2').textContent;
             document.getElementById('overlay-text').textContent = currentLang === 'it' ? link.getAttribute('data-overlay-it') : link.getAttribute('data-overlay-en');
-            document.getElementById('overlay-link').href = url;
-
-            if (link.getAttribute('data-external') === 'true') document.getElementById('overlay-link').setAttribute('target', '_blank');
-            else document.getElementById('overlay-link').removeAttribute('target');
 
             document.body.classList.add('modal-open'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.add('active');
         });
@@ -676,10 +727,29 @@
             snd.playClick(); overlay.classList.remove('active'); overlay.setAttribute('aria-hidden', 'true'); document.body.classList.remove('modal-open');
         }
 
+        // Lancio del gioco dentro l'App
+        document.getElementById('overlay-link').addEventListener('click', function() {
+            snd.playClick();
+            const url = this.getAttribute('data-target-url');
+            document.getElementById('game-frame').src = url; 
+            
+            closeOverlay();
+            document.getElementById('sys-bar').classList.remove('visible'); 
+            navTo('screen-game'); 
+        });
+
+        // Uscita dal gioco
+        function exitGame() {
+            snd.playClick();
+            document.getElementById('game-frame').src = ''; 
+            document.getElementById('sys-bar').classList.add('visible'); 
+            navTo('screen-gateway'); 
+        }
+
         // === MULTILINGUA ===
         const translations = {
-            it: { subtitle: "Tutti i progetti", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "TRASCINA PER INSERIRE ⬇", gate_git_desc: "12 Giochi + Moduli", gate_itch_desc: "Standalone & Support", btn_init: "Inizializza", btn_cancel: "Annulla", btn_boot: "Avvia Sistema", btn_back: "◀ RIT.", privacy_text: "Privacy by Design: Nessun tracciamento. Salvataggi in locale." },
-            en: { subtitle: "All Projects", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "DRAG TO INSERT ⬇", gate_git_desc: "12 Games + Modules", gate_itch_desc: "Standalone & Support", btn_init: "Initialize", btn_cancel: "Cancel", btn_boot: "Boot System", btn_back: "◀ BACK", privacy_text: "Privacy by Design: No tracking. Local saves only." }
+            it: { subtitle: "Tutti i progetti", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "TRASCINA PER INSERIRE ⬇", gate_git_desc: "12 Giochi + Moduli", gate_itch_desc: "Standalone & Support", btn_init: "Inizializza", btn_cancel: "Annulla", btn_boot: "Avvia Sistema", btn_back: "◀ RIT.", privacy_text: "Privacy by Design: Nessun tracciamento. Salvataggi in locale.", btn_exit_game: "◀ CHIUDI GIOCO" },
+            en: { subtitle: "All Projects", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "DRAG TO INSERT ⬇", gate_git_desc: "12 Games + Modules", gate_itch_desc: "Standalone & Support", btn_init: "Initialize", btn_cancel: "Cancel", btn_boot: "Boot System", btn_back: "◀ BACK", privacy_text: "Privacy by Design: No tracking. Local saves only.", btn_exit_game: "◀ CLOSE GAME" }
         };
         let currentLang = 'it';
 
