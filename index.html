@@ -5,27 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TheOldSmokeArcade1984 - OS</title>
     
-    <!-- === SEO & AI DISCOVERY METADATA === -->
-    <meta name="description" content="Hub ufficiale di TheOldSmokeArcade1984. Sistema operativo virtuale e collezione indipendente di giochi retro arcade e cyberpunk giocabili da browser.">
-    <meta name="keywords" content="giochi indie, retro arcade, cyberpunk, synthwave, pwa, giochi browser, theoldsmokearcade1984">
+    <!-- === SEO & DISCOVERY === -->
+    <meta name="description" content="TheOldSmokeArcade1984 OS - Hub ufficiale di giochi retro arcade e cyberpunk indie. 12 titoli giocabili nel browser o installabili come Progressive Web App. Privacy by design.">
+    <meta name="keywords" content="giochi indie, retro arcade, cyberpunk, synthwave, pwa, giochi browser, theoldsmokearcade1984, null sector, neon specter">
     <meta name="author" content="TheOldSmokeArcade1984">
-    <meta name="robots" content="index, follow">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+    <link rel="canonical" href="https://theoldsmokearcade1984.github.io/">
 
+    <!-- === OPEN GRAPH (WhatsApp, Telegram, Facebook, Discord, ecc.) === -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="TheOldSmokeArcade1984 - OS">
-    <meta property="og:description" content="Entra nel terminale. La collezione indipendente di giochi retro arcade e cyberpunk. Gioca da browser o installa l'App. Zero assets. Privacy by design.">
+    <meta property="og:description" content="Entra nel terminale. Collezione indie di giochi retro arcade e cyberpunk. Gioca subito o installa come App.">
     <meta property="og:url" content="https://theoldsmokearcade1984.github.io/">
+    <meta property="og:image" content="https://theoldsmokearcade1984.github.io/og-banner.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="TheOldSmokeArcade1984 OS - Retro Cyberpunk Arcade Hub">
+    <meta property="og:site_name" content="TheOldSmokeArcade1984">
+    <meta property="og:locale" content="it_IT">
 
-    <!-- === JSON-LD (Dati Strutturati per i Motori AI e Google) === -->
+    <!-- === TWITTER / X CARDS === -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="TheOldSmokeArcade1984 - OS">
+    <meta name="twitter:description" content="Hub ufficiale retro arcade cyberpunk - 12 giochi browser + PWA installabile">
+    <meta name="twitter:image" content="https://theoldsmokearcade1984.github.io/og-banner.jpg">
+    <meta name="twitter:image:alt" content="TheOldSmokeArcade1984 OS">
+
+    <!-- === JSON-LD (per Google e AI) === -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
+      "@type": "WebApplication",
       "name": "TheOldSmokeArcade1984 OS",
-      "operatingSystem": "Web, Android, iOS, Windows",
+      "url": "https://theoldsmokearcade1984.github.io/",
+      "description": "Hub ufficiale di sviluppo indipendente retro arcade e cyberpunk. Collezione di 12 videogiochi giocabili direttamente nel browser.",
       "applicationCategory": "GameApplication",
+      "operatingSystem": "Web Browser, Android, iOS, Windows",
       "genre": ["Arcade", "Retro", "Cyberpunk", "Synthwave", "Indie"],
-      "description": "Un hub centralizzato a forma di sistema operativo retro per lanciare e scaricare una libreria di 12 videogiochi e moduli indipendenti con privacy by design.",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -39,9 +55,8 @@
     }
     </script>
 
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2305010a'/><path d='M32 8 L56 32 L32 56 L8 32 Z' fill='none' stroke='%2300ffcc' stroke-width='4'/><circle cx='32' cy='32' r='8' fill='%23ff0055' filter='drop-shadow(0 0 5px %23ff0055)'/></svg>" type="image/svg+xml">
-
-    <!-- === PWA MANIFEST & MOBILE SUPPORT === -->
+    <!-- === FAVICON & PWA === -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2305010a'/><path d='M32 8 L56 32 L32 56 L8 32 Z' fill='none' stroke='%2300ffcc' stroke-width='4'/><circle cx='32' cy='32' r='8' fill='%23ff0055'/></svg>" type="image/svg+xml">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#05010a">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -69,7 +84,6 @@
             background-color: var(--bg-void); color: var(--text-main);
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden; perspective: 1200px;
-            /* FIX ZOOM: Scala l'interfaccia al 90% e compensa le dimensioni per riempire lo schermo */
             position: absolute;
             top: 0; left: 0;
             width: 111.11%; 
@@ -129,7 +143,6 @@
         .sys-btn:hover { color: var(--text-main); border-color: var(--text-main); background: rgba(255,255,255,0.1); }
         .sys-btn.active { color: var(--laser-sec); border-color: var(--laser-sec); text-shadow: 0 0 8px var(--laser-sec); }
 
-        /* Tooltip personalizzati neon */
         @media (hover: hover) and (pointer: fine) {
             .sys-btn { position: relative; }
             .sys-btn::after {
@@ -149,7 +162,7 @@
         .btn-back.visible { opacity: 1; pointer-events: auto; }
         .btn-back:hover { background: var(--laser-pri); color: var(--text-main); box-shadow: 0 0 15px var(--laser-pri); }
 
-        /* === 4. SEQUENZA DI BOOT E DIAGNOSTICA === */
+        /* === 4. SEQUENZA DI BOOT === */
         #screen-boot { background: #000; z-index: 9000; }
         .title-container { position: absolute; top: 15%; display: inline-block; z-index: 5; }
         .boot-title { font-size: clamp(2rem, 6vw, 4rem); text-transform: uppercase; font-weight: bold; text-align: center; text-shadow: 0 0 10px var(--laser-sec), 0 0 30px var(--laser-pri); clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); animation: textRevealSplash 2s ease-in-out forwards; }
@@ -233,7 +246,6 @@
 
         .card-text-content { width: 100%; text-align: center; }
         
-        /* Nuovi BADGE di Genere per far capire il gameplay */
         .genre-badge { display: inline-block; font-size: 0.75rem; padding: 3px 8px; border: 1px solid currentColor; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; transform: translateZ(25px); position: relative; z-index: 2; }
         .card-laser .genre-badge { color: var(--laser-sec); background: rgba(0, 255, 204, 0.1); }
         .card-plasma .genre-badge { color: var(--plasma-sec); background: rgba(252, 238, 10, 0.1); }
@@ -348,7 +360,6 @@
         }
         .btn-exit-game:hover, .btn-exit-game:active { background: var(--laser-pri); color: #fff; transform: scale(1.05); }
 
-        /* Lista formattata per HELP Modal */
         .help-list { text-align: left; margin: 15px 0 15px 25px; color: #fff; font-family: 'Courier New', Courier, monospace; }
         .help-list li { margin-bottom: 8px; text-shadow: none; }
         .help-highlight { color: var(--laser-sec); font-weight: bold; }
@@ -359,20 +370,17 @@
     <div class="global-crt"></div>
 
     <nav class="system-bar visible" id="sys-bar" aria-label="Barra di sistema" role="navigation" style="z-index: 999999; opacity: 1;">
-        <!-- HOME a sinistra -->
         <div class="sys-group">
             <button class="sys-btn home-btn hover-snd click-snd" id="btn-home" 
                     onclick="navTo('screen-gateway')" data-i18n="btn_home"
                     aria-label="Torna alla Home">◀ HOME</button>
             
-            <!-- NUOVO PULSANTE INFO/HELP -->
             <button class="sys-btn hover-snd click-snd" onclick="openHelp()" 
                     aria-label="Info e Aiuto" style="color: var(--laser-sec); border-color: var(--laser-sec);">
                 [ ? ]
             </button>
         </div>
 
-        <!-- Controlli a destra -->
         <div class="sys-group">
             <button class="sys-btn hover-snd click-snd" id="pwa-install-btn" 
                     aria-label="Installa come App PWA">
@@ -455,13 +463,11 @@
         </div>
     </div>
 
-    <!-- NUOVA SCHERMATA: GAME IFRAME -->
     <div id="screen-game" class="screen">
         <iframe id="game-frame" src="" allowfullscreen></iframe>
         <button class="btn-exit-game hover-snd click-snd" onclick="exitGame()" data-i18n="btn_exit_game">◀ CHIUDI GIOCO</button>
     </div>
 
-    <!-- OVERLAY INFO GIOCO -->
     <div id="instruction-overlay" class="system-overlay theme-laser" aria-hidden="true" role="dialog" aria-modal="true">
         <div class="modal-box">
             <h2 id="overlay-title" class="overlay-title">TITOLO</h2>
@@ -473,7 +479,6 @@
         </div>
     </div>
 
-    <!-- NUOVO OVERLAY HELP (COSA E' QUESTO SITO?) -->
     <div id="help-overlay" class="system-overlay theme-laser" aria-hidden="true" role="dialog" aria-modal="true">
         <div class="modal-box" style="border-color: var(--laser-sec);">
             <h2 class="overlay-title">>_ SYSTEM INFO</h2>
@@ -493,7 +498,6 @@
     </div>
 
     <script>
-        // === DATI GIOCHI CON AGGIUNTA DI 'GENRE' ===
         const gamesGithub = [
             { genre: "12-IN-1 COLLECTION", title: "ARCADE HUB", subtitle: "Arcade Collection (12)", url: "https://theoldsmokearcade1984.github.io/TheTwelveClassicGameTheOldSmokeArcade1984/", overlay: { it: "Sistema operativo: Attivo.\\nAccesso alla libreria dei 12 titoli completi.\\nControlli touch integrati.", en: "OS: Active.\\nAccess to the full 12-game library.\\nIntegrated touch controls." }, cardDesc: { it: "La raccolta completa con controlli touch.", en: "The complete collection with touch controls." } },
             { genre: "TACTICAL STEALTH", title: "NULL SECTOR", subtitle: "Octacore: Null Sector", url: "https://theoldsmokearcade1984.github.io/OCTACORE-NULL_SECTOR-Advanced/", overlay: { it: "Infiltrazione tattica richiesta.\\nModulo Advanced Edition attivato.", en: "Tactical infiltration required.\\nAdvanced Edition module activated." }, cardDesc: { it: "Sistema di infiltrazione tattica attivato.", en: "Tactical infiltration system activated." } },
@@ -589,7 +593,7 @@
             });
         }
 
-        // === DRAG MONETA & SEQUENZA DIAGNOSTICA BOOT ===
+        // === DRAG MONETA ===
         const coin = document.getElementById('drag-coin');
         let isCoinDragging = false, startCoinY = 0, currentCoinY = 0;
 
@@ -636,7 +640,6 @@
         function bootSystem() {
             snd.playBoot(); 
             
-            // Inizia il Log Diagnostico per far capire il sito all'utente
             const dragTxt = document.getElementById('drag-txt');
             document.getElementById('coin-wrapper').style.display = 'none';
             document.getElementById('coin-slot').style.display = 'none';
@@ -657,7 +660,7 @@
             setTimeout(() => {
                 navTo('screen-gateway');
                 setTimeout(() => document.getElementById('sys-bar').classList.add('visible'), 800);
-            }, 2500); // Mostra il log per 2.5 secondi
+            }, 2500);
         }
 
         // === NAVIGAZIONE OS ===
@@ -685,8 +688,6 @@
             data.forEach((game, i) => {
                 const activeClass = i === 0 ? 'active' : '';
                 const scanline = isPlasma ? '<div class="scanline-overlay"></div>' : '';
-                
-                // Generazione del badge Genere
                 const genreBadge = game.genre ? `<span class="genre-badge">${game.genre}</span>` : '';
 
                 const html = `
@@ -771,7 +772,6 @@
             document.body.classList.add('modal-open'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.add('active');
         });
 
-        // Apertura / Chiusura Overlays
         function openHelp() {
             snd.playClick();
             const overlay = document.getElementById('help-overlay');
@@ -788,7 +788,6 @@
             document.body.classList.remove('modal-open');
         }
 
-        // Lancio del gioco
         document.getElementById('overlay-link').addEventListener('click', function() {
             snd.playClick();
             const url = this.getAttribute('data-target-url');
@@ -799,7 +798,6 @@
             navTo('screen-game'); 
         });
 
-        // Uscita dal gioco
         function exitGame() {
             snd.playClick();
             document.getElementById('game-frame').src = ''; 
