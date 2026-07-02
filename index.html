@@ -5,14 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TheOldSmokeArcade1984 - OS</title>
     
-    <!-- === SEO & DISCOVERY === -->
     <meta name="description" content="TheOldSmokeArcade1984 OS - Hub ufficiale di giochi retro arcade e cyberpunk indie. 12 titoli giocabili nel browser o installabili come Progressive Web App. Privacy by design.">
     <meta name="keywords" content="giochi indie, retro arcade, cyberpunk, synthwave, pwa, giochi browser, theoldsmokearcade1984, null sector, neon specter">
     <meta name="author" content="TheOldSmokeArcade1984">
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="https://theoldsmokearcade1984.github.io/">
 
-    <!-- === OPEN GRAPH (WhatsApp, Telegram, Facebook, Discord, ecc.) === -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="TheOldSmokeArcade1984 - OS">
     <meta property="og:description" content="Entra nel terminale. Collezione indie di giochi retro arcade e cyberpunk. Gioca subito o installa come App.">
@@ -24,14 +22,12 @@
     <meta property="og:site_name" content="TheOldSmokeArcade1984">
     <meta property="og:locale" content="it_IT">
 
-    <!-- === TWITTER / X CARDS === -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="TheOldSmokeArcade1984 - OS">
     <meta name="twitter:description" content="Hub ufficiale retro arcade cyberpunk - 12 giochi browser + PWA installabile">
     <meta name="twitter:image" content="https://theoldsmokearcade1984.github.io/og-banner.jpg">
     <meta name="twitter:image:alt" content="TheOldSmokeArcade1984 OS">
 
-    <!-- === JSON-LD (per Google e AI) === -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -55,14 +51,12 @@
     }
     </script>
 
-    <!-- === FAVICON & PWA === -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2305010a'/><path d='M32 8 L56 32 L32 56 L8 32 Z' fill='none' stroke='%2300ffcc' stroke-width='4'/><circle cx='32' cy='32' r='8' fill='%23ff0055'/></svg>" type="image/svg+xml">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest-v2.json">
     <meta name="theme-color" content="#05010a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="OldSmokeArcade">
-    <link rel="apple-touch-icon" href="icon.svg">
 
     <style>
         /* === 0. PALETTE CYBERPUNK / SYNTHWAVE === */
@@ -129,7 +123,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             background: rgba(5, 1, 10, 0.95); border-bottom: 1px solid #222;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 0 15px; z-index: 100; transition: filter 0.4s ease; opacity: 0; pointer-events: none;
+            padding: 0 15px; z-index: 100000; transition: filter 0.4s ease; opacity: 0; pointer-events: none;
         }
         .system-bar.visible { animation: fadeInSys 1s forwards; pointer-events: auto; }
         @keyframes fadeInSys { to { opacity: 1; } }
@@ -157,10 +151,6 @@
         
         #pwa-install-btn { color: #fff; border-color: var(--laser-sec); background: rgba(0, 255, 204, 0.1); box-shadow: 0 0 10px rgba(0,255,204,0.3); display: none; }
         #pwa-install-btn:hover { background: var(--laser-sec); color: #000; }
-
-        .btn-back { color: var(--laser-pri); border-color: var(--laser-pri); opacity: 0; pointer-events: none; }
-        .btn-back.visible { opacity: 1; pointer-events: auto; }
-        .btn-back:hover { background: var(--laser-pri); color: var(--text-main); box-shadow: 0 0 15px var(--laser-pri); }
 
         /* === 4. SEQUENZA DI BOOT === */
         #screen-boot { background: #000; z-index: 9000; }
@@ -200,24 +190,11 @@
         .os-subtitle { font-size: clamp(0.9rem, 2vw, 1.2rem); color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px; margin: 10px 0 40px; text-align: center; }
         
         .gateway-controls { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; width: 100%; max-width: 800px; padding: 0 20px; }
-        
-        .gateway-btn {
-            position: relative; z-index: 50; 
-            pointer-events: auto !important;
-            flex: 1; min-width: 260px; padding: 25px 15px; font-weight: bold; text-transform: uppercase; 
-            font-size: 1.2rem; text-decoration: none; border-radius: 8px; 
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); 
-            cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center;
-        }
-        
+        .gateway-btn { position: relative; z-index: 50; pointer-events: auto !important; flex: 1; min-width: 260px; padding: 25px 15px; font-weight: bold; text-transform: uppercase; font-size: 1.2rem; border-radius: 8px; transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
         .gateway-laser { background: rgba(255, 0, 85, 0.05); border: 2px solid var(--laser-pri); color: var(--laser-pri); box-shadow: inset 0 0 20px rgba(255,0,85,0.2), 0 0 20px rgba(255,0,85,0.1); }
-        .gateway-laser:hover, .gateway-laser:focus-visible, .gateway-laser.focus-pad { background: rgba(255, 0, 85, 0.15); box-shadow: inset 0 0 40px rgba(255,0,85,0.4), 0 0 40px rgba(255,0,85,0.4); transform: translateY(-5px) scale(1.05); }
-        .gateway-laser:active { transform: scale(0.95); }
-
+        .gateway-laser:hover { background: rgba(255, 0, 85, 0.15); box-shadow: inset 0 0 40px rgba(255,0,85,0.4), 0 0 40px rgba(255,0,85,0.4); transform: translateY(-5px) scale(1.05); }
         .gateway-plasma { background: rgba(188, 19, 254, 0.05); border: 2px solid var(--plasma-pri); color: var(--plasma-pri); box-shadow: inset 0 0 20px rgba(188, 19, 254, 0.2), 0 0 20px rgba(188, 19, 254, 0.1); }
-        .gateway-plasma:hover, .gateway-plasma:focus-visible, .gateway-plasma.focus-pad { background: rgba(188, 19, 254, 0.15); box-shadow: inset 0 0 40px rgba(188, 19, 254, 0.4), 0 0 40px rgba(188, 19, 254, 0.4); transform: translateY(-5px) scale(1.05); }
-        .gateway-plasma:active { transform: scale(0.95); }
-        
+        .gateway-plasma:hover { background: rgba(188, 19, 254, 0.15); box-shadow: inset 0 0 40px rgba(188, 19, 254, 0.4), 0 0 40px rgba(188, 19, 254, 0.4); transform: translateY(-5px) scale(1.05); }
         .gateway-desc { font-size: 0.8rem; color: var(--text-dim); font-weight: normal; }
 
         /* === 6. SLIDERS E CARDS === */
@@ -230,7 +207,6 @@
         .slider-bottom-controls { display: flex; align-items: center; justify-content: center; gap: 25px; margin-top: 25px; width: 100%; }
         
         .nav-btn { background: transparent; border: none; font-size: 2.5rem; font-family: monospace; cursor: pointer; padding: 5px; z-index: 20; transition: transform 0.2s, text-shadow 0.2s; display: flex; align-items: center; justify-content: center; }
-        .nav-btn:active, .nav-btn.pressed { transform: scale(0.8); }
         .laser-btn { color: var(--laser-pri); text-shadow: 0 0 15px rgba(255,0,85,0.8); }
         .laser-btn:hover { text-shadow: 0 0 25px var(--laser-pri); }
         .plasma-btn { color: var(--plasma-pri); text-shadow: 0 0 15px rgba(188, 19, 254, 0.8); }
@@ -245,7 +221,6 @@
         .card-base.active { opacity: 1; visibility: visible; pointer-events: auto; z-index: 10; transform: scale(1) translateZ(0) rotateY(0deg); }
 
         .card-text-content { width: 100%; text-align: center; }
-        
         .genre-badge { display: inline-block; font-size: 0.75rem; padding: 3px 8px; border: 1px solid currentColor; border-radius: 4px; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; transform: translateZ(25px); position: relative; z-index: 2; }
         .card-laser .genre-badge { color: var(--laser-sec); background: rgba(0, 255, 204, 0.1); }
         .card-plasma .genre-badge { color: var(--plasma-sec); background: rgba(252, 238, 10, 0.1); }
@@ -267,26 +242,20 @@
             .card-laser.active:hover { transform: translateZ(30px) rotateX(2deg) rotateY(-2deg); border-color: var(--laser-pri); box-shadow: 0 15px 40px rgba(255,0,85,0.4); }
             .card-plasma.active:hover { transform: translateZ(30px) rotateX(-2deg) rotateY(2deg); border-color: var(--plasma-pri); box-shadow: 0 15px 40px rgba(188, 19, 254, 0.4); }
         }
-        .card-laser.active:active, .card-laser.active.focus-pad { transform: translateZ(30px) rotateX(2deg) rotateY(-2deg); border-color: var(--laser-pri); box-shadow: 0 15px 40px rgba(255,0,85,0.4); }
-        .card-plasma.active:active, .card-plasma.active.focus-pad { transform: translateZ(30px) rotateX(-2deg) rotateY(2deg); border-color: var(--plasma-pri); box-shadow: 0 15px 40px rgba(188, 19, 254, 0.4); }
+        .card-laser.active:active { transform: translateZ(30px) rotateX(2deg) rotateY(-2deg); border-color: var(--laser-pri); box-shadow: 0 15px 40px rgba(255,0,85,0.4); }
+        .card-plasma.active:active { transform: translateZ(30px) rotateX(-2deg) rotateY(2deg); border-color: var(--plasma-pri); box-shadow: 0 15px 40px rgba(188, 19, 254, 0.4); }
 
         .btn-game { padding: 15px 20px; text-align: center; font-weight: bold; text-transform: uppercase; transform: translateZ(30px); border: none; cursor: pointer; border-radius: 4px; transition: all 0.3s; position: relative; z-index: 2; font-size: 1.1rem; width: 100%; max-width: 250px; margin: 0 auto; }
-        
         .btn-laser { background: var(--laser-pri); color: #fff; }
-        .card-laser:hover .btn-laser, .card-laser.focus-pad .btn-laser, .btn-laser:active { background: var(--laser-sec); color: #000; box-shadow: 0 0 20px var(--laser-sec); }
-        
+        .card-laser:hover .btn-laser { background: var(--laser-sec); color: #000; box-shadow: 0 0 20px var(--laser-sec); }
         .btn-plasma { background: var(--plasma-pri); color: #fff; }
-        .card-plasma:hover .btn-plasma, .card-plasma.focus-pad .btn-plasma, .btn-plasma:active { background: var(--plasma-sec); color: #000; box-shadow: 0 0 20px var(--plasma-sec); }
-        
-        .scanline-overlay { position: absolute; inset: 0; pointer-events: none; z-index: 0; opacity: 0.3; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%); background-size: 100% 4px; }
+        .card-plasma:hover .btn-plasma { background: var(--plasma-sec); color: #000; box-shadow: 0 0 20px var(--plasma-sec); }
 
         /* === 7. OVERLAYS === */
         .system-overlay { position: fixed; inset: 0; background-color: rgba(5,1,10,0.85); z-index: 100000; display: none; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease; backdrop-filter: blur(5px); padding: 20px; }
         .system-overlay.active { display: flex; opacity: 1; }
-
         .modal-box { background: var(--bg-panel); border: 2px solid; border-radius: 8px; padding: 40px 30px; width: 100%; max-width: 500px; text-align: center; box-shadow: 0 0 40px rgba(0,0,0,0.9); transform: scale(0.9) translateY(20px); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
         .system-overlay.active .modal-box { transform: scale(1) translateY(0); }
-
         .theme-laser .modal-box { border-color: var(--laser-sec); box-shadow: 0 0 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(0, 255, 204, 0.15); }
         .theme-plasma .modal-box { border-color: var(--plasma-sec); box-shadow: 0 0 50px rgba(0,0,0,0.9), inset 0 0 20px rgba(252, 238, 10, 0.15); }
         
@@ -296,14 +265,22 @@
         .theme-plasma .overlay-text { color: var(--plasma-sec); }
         
         .overlay-controls { display: flex; gap: 15px; justify-content: center; flex-direction: column; width: 100%; margin: 0 auto; }
-
         .btn-close { background: transparent; border: 1px solid var(--text-dim); color: var(--text-dim); padding: 15px 20px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-family: inherit; transition: all 0.3s; border-radius: 4px; width: 100%; }
-        .btn-close:hover, .btn-close.focus-pad { background: #fff; color: #000; border-color: #fff; }
+        .btn-close:hover { background: #fff; color: #000; border-color: #fff; }
         
-        @keyframes spinBorder { 100% { transform: rotate(360deg); } }
-        .privacy-note { position: absolute; bottom: 20px; width: 100%; text-align: center; color: #555; font-size: 0.8rem; pointer-events: none; padding: 0 10px; }
+        /* === 8. GAME IFRAME === */
+        #screen-game { background: #000; z-index: 90000; padding: 0 !important; padding-top: 60px !important; display: flex; flex-direction: column; }
+        #game-frame { flex: 1; width: 100vw; border: none; background: #000; }
+        .btn-exit-game {
+            position: absolute; top: 75px; left: 15px; z-index: 999999;
+            background: rgba(5, 1, 10, 0.85); border: 2px solid var(--laser-pri); color: var(--laser-pri);
+            padding: 10px 15px; font-size: 0.9rem; font-weight: bold; font-family: inherit; border-radius: 8px;
+            cursor: pointer; text-transform: uppercase; backdrop-filter: blur(5px);
+            box-shadow: 0 0 15px rgba(255,0,85,0.4); transition: all 0.3s;
+        }
+        .btn-exit-game:hover { background: var(--laser-pri); color: #fff; transform: scale(1.05); }
 
-        /* === 8. VERSIONE PC (SPECTACULAR LAYOUT) === */
+        /* === 9. VERSIONE PC E LANDSCAPE === */
         @media (min-width: 900px) {
             .slider-section { max-width: 900px; padding: 0; }
             .slider-wrapper { height: 350px; }
@@ -317,48 +294,21 @@
             .os-title { font-size: 5rem; }
         }
 
-        /* === 9. OTTIMIZZAZIONE LANDSCAPE === */
         @media (orientation: landscape) and (max-height: 600px) {
             .screen { 
                 display: block !important; overflow-y: auto !important; overflow-x: hidden !important; 
                 padding-top: 80px !important; padding-bottom: 60px !important; text-align: center;
                 -webkit-overflow-scrolling: touch;
             }
-            #screen-game { display: flex !important; overflow: hidden !important; padding: 0 !important; }
-            .title-container { position: relative; top: 0; margin-top: 10px; width: 100%; display: flex; justify-content: center; }
+            #screen-game { display: flex !important; overflow: hidden !important; padding-top: 60px !important; }
             .interactive-area { position: relative; padding-top: 30px; }
             .laser-border { display: none; }
-            .os-title { font-size: clamp(2rem, 5vh, 3rem); margin-top: 10px; }
-            .os-subtitle { font-size: 1rem; margin-bottom: 20px; }
             .gateway-controls { flex-direction: row; gap: 15px; padding: 0 15px; margin: 0 auto; max-width: 600px; display: flex; }
             .gateway-btn { padding: 15px 10px; min-width: 200px; }
-            .privacy-note { position: relative; bottom: auto; margin-top: 40px; padding-bottom: 20px; }
-            .slider-section { margin: 0 auto; }
-            .section-title { font-size: 1.2rem; margin-bottom: 15px; margin-top: 10px; }
             .slider-wrapper { height: 260px; }
             .card-base { padding: 15px 20px; flex-direction: row; gap: 15px; align-items: center; justify-content: space-between; }
             .card-text-content { text-align: left; max-width: 60%; }
-            .genre-badge { margin-bottom: 5px; }
-            .card-base h2 { font-size: 1.3rem; margin-bottom: 8px; transform: translateZ(20px); }
-            .card-base p { font-size: 0.95rem; line-height: 1.4; transform: translateZ(10px); }
-            .btn-game { padding: 12px; font-size: 1rem; min-width: 140px; margin: 0; transform: translateZ(30px); }
-            .slider-bottom-controls { margin-top: 15px; margin-bottom: 20px; }
-            .drag-instruction { font-size: 1.1rem; margin-top: 0; margin-bottom: 15px; }
-            .coin-wrapper { width: 90px; height: 90px; margin-bottom: 30px; margin-left: auto; margin-right: auto; }
-            .finger-guide { right: -30px; top: 10px; transform: scale(0.7); }
         }
-
-        /* === 10. GAME IFRAME === */
-        #screen-game { background: #000; z-index: 90000; padding: 0 !important; }
-        #game-frame { width: 100vw; height: 100vh; height: 100dvh; border: none; background: #000; }
-        .btn-exit-game {
-            position: absolute; top: 15px; left: 15px; z-index: 999999;
-            background: rgba(5, 1, 10, 0.85); border: 2px solid var(--laser-pri); color: var(--laser-pri);
-            padding: 10px 15px; font-size: 0.9rem; font-weight: bold; font-family: inherit; border-radius: 8px;
-            cursor: pointer; text-transform: uppercase; backdrop-filter: blur(5px);
-            box-shadow: 0 0 15px rgba(255,0,85,0.4); transition: all 0.3s;
-        }
-        .btn-exit-game:hover, .btn-exit-game:active { background: var(--laser-pri); color: #fff; transform: scale(1.05); }
 
         .help-list { text-align: left; margin: 15px 0 15px 25px; color: #fff; font-family: 'Courier New', Courier, monospace; }
         .help-list li { margin-bottom: 8px; text-shadow: none; }
@@ -369,28 +319,38 @@
 
     <div class="global-crt"></div>
 
-    <nav class="system-bar visible" id="sys-bar" aria-label="Barra di sistema" role="navigation" style="z-index: 999999; opacity: 1;">
+    <nav class="system-bar visible" id="sys-bar" aria-label="Barra di sistema" role="navigation">
         <div class="sys-group">
             <button class="sys-btn home-btn hover-snd click-snd" id="btn-home" 
-                    onclick="navTo('screen-gateway')" data-i18n="btn_home"
-                    aria-label="Torna alla Home">◀ HOME</button>
+                    onclick="navHome()" data-i18n="btn_home"
+                    aria-label="Torna alla Home"
+                    data-tooltip-it="Torna alla Home / Chiudi Gioco"
+                    data-tooltip-en="Return Home / Close Game">◀ HOME</button>
             
             <button class="sys-btn hover-snd click-snd" onclick="openHelp()" 
-                    aria-label="Info e Aiuto" style="color: var(--laser-sec); border-color: var(--laser-sec);">
+                    aria-label="Info e Aiuto" style="color: var(--laser-sec); border-color: var(--laser-sec);"
+                    data-tooltip-it="Info Sistema"
+                    data-tooltip-en="System Info">
                 [ ? ]
             </button>
         </div>
 
         <div class="sys-group">
             <button class="sys-btn hover-snd click-snd" id="pwa-install-btn" 
-                    aria-label="Installa come App PWA">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>&nbsp;APP
+                    aria-label="Installa come App PWA"
+                    data-tooltip-it="Installa Web App"
+                    data-tooltip-en="Install Web App">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>&nbsp;APP
             </button>
             <button class="sys-btn active hover-snd click-snd" id="audio-btn" onclick="toggleAudio()" 
-                    aria-label="Attiva/Disattiva audio">🔊</button>
+                    aria-label="Attiva/Disattiva audio"
+                    data-tooltip-it="Attiva/Disattiva Audio"
+                    data-tooltip-en="Toggle Audio">🔊</button>
             <button class="sys-btn hover-snd click-snd" id="fs-btn" onclick="toggleFullScreen()" 
-                    aria-label="Schermo Intero">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                    aria-label="Schermo Intero"
+                    data-tooltip-it="Schermo Intero"
+                    data-tooltip-en="Full Screen">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
             </button>
             <button class="sys-btn active lang-btn hover-snd click-snd" onclick="setLang('it')">IT</button>
             <button class="sys-btn lang-btn hover-snd click-snd" onclick="setLang('en')">EN</button>
@@ -398,10 +358,7 @@
     </nav>
 
     <div id="screen-boot" class="screen active">
-        <div class="title-container">
-            <div class="laser-spark" id="splash-spark"></div>
-            <div class="boot-title" id="splash-txt">TheOldSmoke<br>Arcade1984</div>
-        </div>
+        <div class="title-container"><div class="laser-spark" id="splash-spark"></div><div class="boot-title" id="splash-txt">TheOldSmoke<br>Arcade1984</div></div>
         <div class="laser-border"></div>
         <div class="interactive-area">
             <div class="drag-instruction blinking" data-i18n="drag_coin" id="drag-txt">TRASCINA PER INSERIRE ⬇</div>
@@ -417,9 +374,7 @@
                     </svg>
                 </div>
             </div>
-            <div class="coin-slot-container" id="coin-slot">
-                <div class="coin-slot-hole"></div><div class="coin-slot-front"></div><div class="coin-slot-mask"></div>
-            </div>
+            <div class="coin-slot-container" id="coin-slot"><div class="coin-slot-hole"></div><div class="coin-slot-front"></div><div class="coin-slot-mask"></div></div>
         </div>
     </div>
 
@@ -427,39 +382,22 @@
         <h1 class="os-title">TheOldSmoke<br>Arcade1984</h1>
         <p class="os-subtitle" data-i18n="subtitle">Tutti i progetti</p>
         <div class="gateway-controls">
-            <div class="gateway-btn gateway-laser hover-snd click-snd focus-pad-target" id="gate-git-btn" onclick="navTo('screen-github')" role="button" tabindex="0">
-                <span data-i18n="gate_git">/// Server Hub [GitHub]</span>
-                <span class="gateway-desc" data-i18n="gate_git_desc">12 Giochi + Moduli</span>
-            </div>
-            <div class="gateway-btn gateway-plasma hover-snd click-snd focus-pad-target" id="gate-itch-btn" onclick="navTo('screen-itch')" role="button" tabindex="0">
-                <span data-i18n="gate_itch">>_ Mirror Nodes [itch.io]</span>
-                <span class="gateway-desc" data-i18n="gate_itch_desc">Standalone & Support</span>
-            </div>
+            <div class="gateway-btn gateway-laser hover-snd click-snd" onclick="navTo('screen-github')" role="button" tabindex="0"><span data-i18n="gate_git">/// Server Hub [GitHub]</span><span class="gateway-desc" data-i18n="gate_git_desc">12 Giochi + Moduli</span></div>
+            <div class="gateway-btn gateway-plasma hover-snd click-snd" onclick="navTo('screen-itch')" role="button" tabindex="0"><span data-i18n="gate_itch">>_ Mirror Nodes [itch.io]</span><span class="gateway-desc" data-i18n="gate_itch_desc">Standalone & Support</span></div>
         </div>
-        <div class="privacy-note" data-i18n="privacy_text">Privacy by Design: Nessun tracciamento. Salvataggi in locale.</div>
     </div>
 
     <div id="screen-github" class="screen laser-zone">
         <h2 class="section-title laser-title" data-i18n="gate_git_title">/// Server Hub</h2>
-        <div class="slider-section">
-            <div class="slider-wrapper" id="wrap-github"></div>
-            <div class="slider-bottom-controls">
-                <button class="nav-btn laser-btn prev-btn hover-snd click-snd" aria-label="Precedente">[&lt;]</button>
-                <div class="slider-indicators" id="ind-github"></div>
-                <button class="nav-btn laser-btn next-btn hover-snd click-snd" aria-label="Successivo">[&gt;]</button>
-            </div>
+        <div class="slider-section"><div class="slider-wrapper" id="wrap-github"></div>
+            <div class="slider-bottom-controls"><button class="nav-btn laser-btn prev-btn hover-snd click-snd">[&lt;]</button><div class="slider-indicators" id="ind-github"></div><button class="nav-btn laser-btn next-btn hover-snd click-snd">[&gt;]</button></div>
         </div>
     </div>
 
     <div id="screen-itch" class="screen plasma-zone">
         <h2 class="section-title plasma-title" data-i18n="gate_itch_title">>_ Mirror Nodes</h2>
-        <div class="slider-section">
-            <div class="slider-wrapper" id="wrap-itch"></div>
-            <div class="slider-bottom-controls">
-                <button class="nav-btn plasma-btn prev-btn hover-snd click-snd" aria-label="Precedente">[&lt;]</button>
-                <div class="slider-indicators" id="ind-itch"></div>
-                <button class="nav-btn plasma-btn next-btn hover-snd click-snd" aria-label="Successivo">[&gt;]</button>
-            </div>
+        <div class="slider-section"><div class="slider-wrapper" id="wrap-itch"></div>
+            <div class="slider-bottom-controls"><button class="nav-btn plasma-btn prev-btn hover-snd click-snd">[&lt;]</button><div class="slider-indicators" id="ind-itch"></div><button class="nav-btn plasma-btn next-btn hover-snd click-snd">[&gt;]</button></div>
         </div>
     </div>
 
@@ -473,8 +411,8 @@
             <h2 id="overlay-title" class="overlay-title">TITOLO</h2>
             <div id="overlay-text" class="overlay-text">Istruzioni operative...</div>
             <div class="overlay-controls">
-                <button id="overlay-link" class="btn-game hover-snd click-snd focus-pad-target" data-i18n="btn_boot">Avvia Sistema</button>
-                <button class="btn-close hover-snd click-snd focus-pad-target" onclick="closeOverlay('instruction-overlay')" data-i18n="btn_cancel">Annulla</button>
+                <button id="overlay-link" class="btn-game hover-snd click-snd" data-i18n="btn_boot">Avvia Sistema</button>
+                <button class="btn-close hover-snd click-snd" onclick="closeOverlay('instruction-overlay')" data-i18n="btn_cancel">Annulla</button>
             </div>
         </div>
     </div>
@@ -491,9 +429,7 @@
                     <li data-i18n="help_l3">🔒 Privacy assoluta: no server, no tracking</li>
                 </ul>
             </div>
-            <div class="overlay-controls">
-                <button class="btn-close hover-snd click-snd focus-pad-target" onclick="closeOverlay('help-overlay')">[ OK ]</button>
-            </div>
+            <div class="overlay-controls"><button class="btn-close hover-snd click-snd" onclick="closeOverlay('help-overlay')">[ OK ]</button></div>
         </div>
     </div>
 
@@ -504,355 +440,138 @@
             { genre: "LOGIC PUZZLE", title: "KNIGHT'S TOUR", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.github.io/Knigth-s_Tour/", overlay: { it: "Algoritmo logico caricato.\\nMuovi il cavallo toccando tutte le caselle della scacchiera.", en: "Logic algorithm loaded.\\nMove the knight touching all squares." }, cardDesc: { it: "Risolvi il classico enigma scacchistico.", en: "Solve the classic chess enigma." } },
             { genre: "ARCADE ACTION", title: "NEON SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.github.io/Neon_Specter/", overlay: { it: "Azione arcade frenetica.\\nObiettivo: Sfuggi al sistema.", en: "Frantic arcade action.\\nObjective: Escape the system." }, cardDesc: { it: "Sfuggi ai sistemi di sicurezza nella città al neon.", en: "Escape security systems in the neon city." } }
         ];
-
         const gamesItch = [
             { genre: "STANDALONE DOWNLOAD", title: "NODE: ARCADE", subtitle: "Arcade Collection", url: "https://theoldsmokearcade1984.itch.io/theoldsmokearcade1984", overlay: { it: "Connessione remota al circuito itch.io.\\nScarica la versione standalone dell'Arcade Collection.\\nSupporta lo sviluppo lasciando un feedback.", en: "Remote connection to itch.io.\\nDownload standalone version of the Arcade Collection.\\nSupport development by leaving feedback." }, cardDesc: { it: "Eseguibile remoto scaricabile sul circuito itch.io.", en: "Remote executable available on the itch.io circuit." } },
             { genre: "STANDALONE DOWNLOAD", title: "NODE: PROTOCOLLO 0", subtitle: "Protocollo Zero", url: "https://theoldsmokearcade1984.itch.io/protocollo-zero-null-sector", overlay: { it: "Connessione remota al circuito itch.io.\\nAccesso ai file di distribuzione del modulo Null Sector.", en: "Remote connection to itch.io.\\nAccess distribution files for the Null Sector module." }, cardDesc: { it: "Scarica la versione indipendente del modulo Null Sector.", en: "Download the standalone version of the Null Sector module." } },
-            { title: "NODE: KNIGHT", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.itch.io/knights-tour", overlay: { it: "Connessione remota al circuito itch.io.\\nCompeti nelle classifiche globali scaricando il pacchetto autonomo.", en: "Remote connection to itch.io.\\nCompete in global leaderboards with the standalone package." }, cardDesc: { it: "Classifiche globali e pacchetti di installazione indipendenti.", en: "Global leaderboards and independent installation packages." } },
+            { genre: "STANDALONE DOWNLOAD", title: "NODE: KNIGHT", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.itch.io/knights-tour", overlay: { it: "Connessione remota al circuito itch.io.\\nCompeti nelle classifiche globali scaricando il pacchetto autonomo.", en: "Remote connection to itch.io.\\nCompete in global leaderboards with the standalone package." }, cardDesc: { it: "Classifiche globali e pacchetti di installazione indipendenti.", en: "Global leaderboards and independent installation packages." } },
             { genre: "STANDALONE DOWNLOAD", title: "NODE: SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.itch.io/neonspecter", overlay: { it: "Connessione remota al circuito itch.io.\\nMirror ufficiale del progetto Neon Specter per il download diretto.", en: "Remote connection to itch.io.\\nOfficial mirror of the Neon Specter project for direct download." }, cardDesc: { it: "Accesso diretto alla directory di distribuzione ufficiale itch.", en: "Direct access to the official itch distribution directory." } }
         ];
 
-        // === MOTORE AUDIO ===
         let audioEnabled = true;
         const snd = {
             ctx: null, masterGain: null, droneOsc: null, droneLfo: null,
-            init() {
-                if (this.ctx) return;
-                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
-                this.masterGain = this.ctx.createGain(); this.masterGain.gain.value = 0.5; this.masterGain.connect(this.ctx.destination);
-                this.startDrone();
-            },
-            playHover() {
-                if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return;
-                const osc = this.ctx.createOscillator(); const g = this.ctx.createGain();
-                osc.type = 'sine'; osc.frequency.setValueAtTime(880, this.ctx.currentTime);
-                g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05);
-                osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.05);
-            },
-            playClick() {
-                if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return;
-                const osc = this.ctx.createOscillator(); const g = this.ctx.createGain();
-                osc.type = 'square'; osc.frequency.setValueAtTime(440, this.ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(55, this.ctx.currentTime + 0.2);
-                g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2);
-                osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.2);
-            },
-            playBoot() {
-                if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return;
-                [440, 554.37, 659.25].forEach(freq => {
-                    const osc = this.ctx.createOscillator(); const g = this.ctx.createGain();
-                    osc.type = 'sawtooth'; osc.frequency.value = freq;
-                    g.gain.setValueAtTime(0.15, this.ctx.currentTime); g.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 2.0);
-                    osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 2.0);
-                });
-            },
-            startDrone() {
-                this.droneOsc = this.ctx.createOscillator(); this.droneOsc.type = 'sawtooth'; this.droneOsc.frequency.value = 55;
-                const filter = this.ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.Q.value = 5;
-                this.droneLfo = this.ctx.createOscillator(); this.droneLfo.type = 'sine'; this.droneLfo.frequency.value = 0.5;
-                const lfoGain = this.ctx.createGain(); lfoGain.gain.value = 400;
-                this.droneLfo.connect(lfoGain); lfoGain.connect(filter.frequency);
-                const g = this.ctx.createGain(); g.gain.value = 0.05;
-                this.droneOsc.connect(filter); filter.connect(g); g.connect(this.masterGain);
-                this.droneOsc.start(); this.droneLfo.start(); filter.frequency.setValueAtTime(200, this.ctx.currentTime);
-            }
+            init() { if (this.ctx) return; this.ctx = new (window.AudioContext || window.webkitAudioContext)(); this.masterGain = this.ctx.createGain(); this.masterGain.gain.value = 0.5; this.masterGain.connect(this.ctx.destination); this.startDrone(); },
+            playHover() { if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return; const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, this.ctx.currentTime); g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05); osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.05); },
+            playClick() { if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return; const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.type = 'square'; osc.frequency.setValueAtTime(440, this.ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(55, this.ctx.currentTime + 0.2); g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2); osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.2); },
+            playBoot() { if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return; [440, 554.37, 659.25].forEach(freq => { const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.type = 'sawtooth'; osc.frequency.value = freq; g.gain.setValueAtTime(0.15, this.ctx.currentTime); g.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 2.0); osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 2.0); }); },
+            startDrone() { this.droneOsc = this.ctx.createOscillator(); this.droneOsc.type = 'sawtooth'; this.droneOsc.frequency.value = 55; const filter = this.ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.Q.value = 5; this.droneLfo = this.ctx.createOscillator(); this.droneLfo.type = 'sine'; this.droneLfo.frequency.value = 0.5; const lfoGain = this.ctx.createGain(); lfoGain.gain.value = 400; this.droneLfo.connect(lfoGain); lfoGain.connect(filter.frequency); const g = this.ctx.createGain(); g.gain.value = 0.05; this.droneOsc.connect(filter); filter.connect(g); g.connect(this.masterGain); this.droneOsc.start(); this.droneLfo.start(); filter.frequency.setValueAtTime(200, this.ctx.currentTime); }
         };
 
-        function toggleAudio() {
-            audioEnabled = !audioEnabled;
-            const btn = document.getElementById('audio-btn');
-            if (audioEnabled) {
-                btn.classList.add('active'); btn.innerText = '🔊';
-                if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0.5, snd.ctx.currentTime, 0.1);
-            } else {
-                btn.classList.remove('active'); btn.innerText = '🔇';
-                if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0, snd.ctx.currentTime, 0.1);
-            }
-        }
+        function toggleAudio() { audioEnabled = !audioEnabled; const btn = document.getElementById('audio-btn'); if (audioEnabled) { btn.classList.add('active'); btn.innerText = '🔊'; if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0.5, snd.ctx.currentTime, 0.1); } else { btn.classList.remove('active'); btn.innerText = '🔇'; if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0, snd.ctx.currentTime, 0.1); } }
 
-        // === PWA LOGICA ===
         let deferredPrompt;
         const installBtn = document.getElementById('pwa-install-btn');
+        window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'flex'; });
+        installBtn.addEventListener('click', async () => { snd.playClick(); if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') installBtn.style.display = 'none'; deferredPrompt = null; } });
+        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').then(r => console.log('SW Registrato')).catch(e => console.log('SW Errore:', e)); }); }
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'flex';
-        });
-
-        installBtn.addEventListener('click', async () => {
-            snd.playClick();
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === 'accepted') installBtn.style.display = 'none';
-                deferredPrompt = null;
-            }
-        });
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').then(r => console.log('SW Registrato')).catch(e => console.log('SW Errore:', e));
-            });
-        }
-
-        // === DRAG MONETA ===
         const coin = document.getElementById('drag-coin');
         let isCoinDragging = false, startCoinY = 0, currentCoinY = 0;
 
         function startDrag(e) {
-            isCoinDragging = true;
-            document.getElementById('finger-guide').style.display = 'none'; 
-            document.getElementById('drag-txt').classList.remove('blinking');
-            document.getElementById('drag-txt').style.opacity = '0.3';
-            try { snd.init(); } catch (err) {}
-            const point = e.touches ? e.touches[0] : e;
-            startCoinY = point.clientY - currentCoinY;
-            coin.style.transition = 'none'; coin.setPointerCapture(e.pointerId);
+            isCoinDragging = true; document.getElementById('finger-guide').style.display = 'none'; document.getElementById('drag-txt').classList.remove('blinking'); document.getElementById('drag-txt').style.opacity = '0.3';
+            try { snd.init(); } catch (err) {} const point = e.touches ? e.touches[0] : e; startCoinY = point.clientY - currentCoinY; coin.style.transition = 'none'; coin.setPointerCapture(e.pointerId);
         }
-
-        function moveDrag(e) {
-            if (!isCoinDragging) return; e.preventDefault();
-            const point = e.touches ? e.touches[0] : e;
-            currentCoinY = point.clientY - startCoinY;
-            if (currentCoinY < -50) currentCoinY = -50;
-            if (currentCoinY > 150) currentCoinY = 150;
-            coin.style.transform = `translateY(${currentCoinY}px)`;
-        }
-
+        function moveDrag(e) { if (!isCoinDragging) return; e.preventDefault(); const point = e.touches ? e.touches[0] : e; currentCoinY = point.clientY - startCoinY; if (currentCoinY < -50) currentCoinY = -50; if (currentCoinY > 150) currentCoinY = 150; coin.style.transform = `translateY(${currentCoinY}px)`; }
         function endDrag(e) {
-            if (!isCoinDragging) return; isCoinDragging = false;
-            try { coin.releasePointerCapture(e.pointerId); } catch (_) {}
-            
-            if (currentCoinY > 60) {
-                coin.style.transition = 'all 0.5s ease-in';
-                coin.style.transform = `translateY(${currentCoinY + 100}px) scale(0.5) rotateX(60deg)`;
-                coin.style.opacity = '0'; snd.playClick();
-                setTimeout(bootSystem, 600);
-            } else {
-                document.getElementById('drag-txt').style.opacity = '1';
-                document.getElementById('drag-txt').classList.add('blinking');
-                coin.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                currentCoinY = 0; coin.style.transform = 'translateY(0px)';
-            }
+            if (!isCoinDragging) return; isCoinDragging = false; try { coin.releasePointerCapture(e.pointerId); } catch (_) {}
+            if (currentCoinY > 60) { coin.style.transition = 'all 0.5s ease-in'; coin.style.transform = `translateY(${currentCoinY + 100}px) scale(0.5) rotateX(60deg)`; coin.style.opacity = '0'; snd.playClick(); setTimeout(bootSystem, 600); } 
+            else { document.getElementById('drag-txt').style.opacity = '1'; document.getElementById('drag-txt').classList.add('blinking'); coin.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'; currentCoinY = 0; coin.style.transform = 'translateY(0px)'; }
         }
-
-        coin.addEventListener('pointerdown', startDrag); window.addEventListener('pointermove', moveDrag);
-        window.addEventListener('pointerup', endDrag); window.addEventListener('pointercancel', endDrag);
+        coin.addEventListener('pointerdown', startDrag); window.addEventListener('pointermove', moveDrag); window.addEventListener('pointerup', endDrag); window.addEventListener('pointercancel', endDrag);
 
         function bootSystem() {
-            snd.playBoot(); 
-            
-            const dragTxt = document.getElementById('drag-txt');
-            document.getElementById('coin-wrapper').style.display = 'none';
-            document.getElementById('coin-slot').style.display = 'none';
-            
-            dragTxt.style.opacity = '1';
-            dragTxt.style.textAlign = 'left';
-            dragTxt.style.fontFamily = 'monospace';
-            dragTxt.style.textTransform = 'none';
-            dragTxt.style.lineHeight = '1.8';
-            dragTxt.style.marginTop = '0';
-            
-            const bootLog = currentLang === 'it' ? 
-                "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..." :
-                "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB...";
-                
-            dragTxt.innerHTML = bootLog;
-
-            setTimeout(() => {
-                navTo('screen-gateway');
-                setTimeout(() => document.getElementById('sys-bar').classList.add('visible'), 800);
-            }, 2500);
+            snd.playBoot(); const dragTxt = document.getElementById('drag-txt'); document.getElementById('coin-wrapper').style.display = 'none'; document.getElementById('coin-slot').style.display = 'none';
+            dragTxt.style.opacity = '1'; dragTxt.style.textAlign = 'left'; dragTxt.style.fontFamily = 'monospace'; dragTxt.style.textTransform = 'none'; dragTxt.style.lineHeight = '1.8'; dragTxt.style.marginTop = '0';
+            const bootLog = currentLang === 'it' ? "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..." : "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..."; dragTxt.innerHTML = bootLog;
+            setTimeout(() => { navTo('screen-gateway'); setTimeout(() => document.getElementById('sys-bar').classList.add('visible'), 800); }, 2500);
         }
 
-        // === NAVIGAZIONE OS ===
         function navTo(screenId) {
-            document.querySelectorAll('.screen').forEach(s => {
-                s.classList.remove('active');
-                setTimeout(() => { if(!s.classList.contains('active')) s.style.visibility = 'hidden'; }, 800);
-            });
-            
-            const targetScreen = document.getElementById(screenId);
-            targetScreen.style.visibility = 'visible';
-            targetScreen.classList.add('active');
-            
-            const backBtn = document.getElementById('btn-back');
-            if (screenId === 'screen-github' || screenId === 'screen-itch') backBtn.classList.add('visible');
-            else backBtn.classList.remove('visible');
+            document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active'); setTimeout(() => { if(!s.classList.contains('active')) s.style.visibility = 'hidden'; }, 800); });
+            const targetScreen = document.getElementById(screenId); targetScreen.style.visibility = 'visible'; targetScreen.classList.add('active');
+            const backBtn = document.getElementById('btn-back'); if (screenId === 'screen-github' || screenId === 'screen-itch') backBtn.classList.add('visible'); else backBtn.classList.remove('visible');
         }
 
-        // === COSTRUZIONE SLIDER ===
-        function buildSlider(containerId, data, isPlasma) {
-            const wrap = document.getElementById(containerId);
-            const themeClass = isPlasma ? 'card-plasma' : 'card-laser';
-            const btnClass = isPlasma ? 'btn-plasma' : 'btn-laser';
-            
-            data.forEach((game, i) => {
-                const activeClass = i === 0 ? 'active' : '';
-                const scanline = isPlasma ? '<div class="scanline-overlay"></div>' : '';
-                const genreBadge = game.genre ? `<span class="genre-badge">${game.genre}</span>` : '';
+        function navHome() {
+            snd.playClick();
+            document.getElementById('game-frame').src = ''; 
+            navTo('screen-gateway');
+        }
 
-                const html = `
-                    <div class="card-base ${themeClass} game-link ${activeClass} hover-snd click-snd" 
-                         data-url="${game.url}" data-external="${isPlasma}"
-                         data-overlay-it="${game.overlay.it}" data-overlay-en="${game.overlay.en}" role="button" tabindex="0">
-                        ${scanline}
-                        <div class="card-text-content">
-                            ${genreBadge}
-                            <h2>${game.subtitle}</h2>
-                            <p data-i18n-dyn-card-it="${game.cardDesc.it}" data-i18n-dyn-card-en="${game.cardDesc.en}">${game.cardDesc.it}</p>
-                        </div>
-                        <div class="btn-game ${btnClass}" data-i18n="btn_init">${isPlasma ? 'Connetti' : 'Inizializza'}</div>
-                    </div>`;
-                wrap.insertAdjacentHTML('beforeend', html);
-            });
+        function buildSlider(containerId, data, isPlasma) {
+            const wrap = document.getElementById(containerId); const themeClass = isPlasma ? 'card-plasma' : 'card-laser'; const btnClass = isPlasma ? 'btn-plasma' : 'btn-laser';
+            data.forEach((game, i) => { const activeClass = i === 0 ? 'active' : ''; const scanline = isPlasma ? '<div class="scanline-overlay"></div>' : ''; const genreBadge = game.genre ? `<span class="genre-badge">${game.genre}</span>` : '';
+                const html = `<div class="card-base ${themeClass} game-link ${activeClass} hover-snd click-snd" data-url="${game.url}" data-external="${isPlasma}" data-overlay-it="${game.overlay.it}" data-overlay-en="${game.overlay.en}" role="button" tabindex="0">${scanline}<div class="card-text-content">${genreBadge}<h2>${game.subtitle}</h2><p data-i18n-dyn-card-it="${game.cardDesc.it}" data-i18n-dyn-card-en="${game.cardDesc.en}">${game.cardDesc.it}</p></div><div class="btn-game ${btnClass}" data-i18n="btn_init">${isPlasma ? 'Connetti' : 'Inizializza'}</div></div>`; wrap.insertAdjacentHTML('beforeend', html); });
         }
         buildSlider('wrap-github', gamesGithub, false); buildSlider('wrap-itch', gamesItch, true);
 
-        // === LOGICA SLIDER ===
         let globalIsSwiping = false;
         function setupSliderLogic(sectionId, indId) {
-            const section = document.getElementById(sectionId);
-            const cards = section.querySelectorAll('.card-base');
-            const prevBtn = section.querySelector('.prev-btn');
-            const nextBtn = section.querySelector('.next-btn');
-            const dotsContainer = document.getElementById(indId);
-            let currentIndex = 0;
-
-            cards.forEach((_, i) => {
-                const dot = document.createElement('div');
-                dot.className = 'dot hover-snd' + (i === 0 ? ' active' : '');
-                dot.addEventListener('click', () => { snd.playClick(); goToSlide(i); });
-                dotsContainer.appendChild(dot);
-            });
-            const dots = dotsContainer.querySelectorAll('.dot');
-
-            function goToSlide(index) {
-                cards[currentIndex].classList.remove('active'); dots[currentIndex].classList.remove('active');
-                currentIndex = index;
-                cards[currentIndex].classList.add('active'); dots[currentIndex].classList.add('active');
-            }
-
-            prevBtn.addEventListener('click', () => { snd.playClick(); goToSlide(currentIndex === 0 ? cards.length - 1 : currentIndex - 1); });
-            nextBtn.addEventListener('click', () => { snd.playClick(); goToSlide(currentIndex === cards.length - 1 ? 0 : currentIndex + 1); });
-
-            let startX = 0, startY = 0;
-            const track = section.querySelector('.slider-wrapper');
-            track.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; startY = e.changedTouches[0].screenY; globalIsSwiping = false; }, { passive: true });
-            track.addEventListener('touchmove', () => { globalIsSwiping = true; }, { passive: true });
-            track.addEventListener('touchend', e => {
-                if (!globalIsSwiping) return;
-                const dx = e.changedTouches[0].screenX - startX, dy = e.changedTouches[0].screenY - startY;
-                if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) nextBtn.click(); else prevBtn.click(); }
-                setTimeout(() => { globalIsSwiping = false; }, 80);
-            }, { passive: true });
+            const section = document.getElementById(sectionId); const cards = section.querySelectorAll('.card-base'); const prevBtn = section.querySelector('.prev-btn'); const nextBtn = section.querySelector('.next-btn'); const dotsContainer = document.getElementById(indId); let currentIndex = 0;
+            cards.forEach((_, i) => { const dot = document.createElement('div'); dot.className = 'dot hover-snd' + (i === 0 ? ' active' : ''); dot.addEventListener('click', () => { snd.playClick(); goToSlide(i); }); dotsContainer.appendChild(dot); }); const dots = dotsContainer.querySelectorAll('.dot');
+            function goToSlide(index) { cards[currentIndex].classList.remove('active'); dots[currentIndex].classList.remove('active'); currentIndex = index; cards[currentIndex].classList.add('active'); dots[currentIndex].classList.add('active'); }
+            prevBtn.addEventListener('click', () => { snd.playClick(); goToSlide(currentIndex === 0 ? cards.length - 1 : currentIndex - 1); }); nextBtn.addEventListener('click', () => { snd.playClick(); goToSlide(currentIndex === cards.length - 1 ? 0 : currentIndex + 1); });
+            let startX = 0, startY = 0; const track = section.querySelector('.slider-wrapper');
+            track.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; startY = e.changedTouches[0].screenY; globalIsSwiping = false; }, { passive: true }); track.addEventListener('touchmove', () => { globalIsSwiping = true; }, { passive: true });
+            track.addEventListener('touchend', e => { if (!globalIsSwiping) return; const dx = e.changedTouches[0].screenX - startX, dy = e.changedTouches[0].screenY - startY; if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) { if (dx < 0) nextBtn.click(); else prevBtn.click(); } setTimeout(() => { globalIsSwiping = false; }, 80); }, { passive: true });
         }
         setupSliderLogic('screen-github', 'ind-github'); setupSliderLogic('screen-itch', 'ind-itch');
 
-        // === OVERLAY EVENTI ===
         document.addEventListener('click', function(e) {
-            const link = e.target.closest('.game-link');
-            if (!link) return;
-            e.preventDefault(); if (globalIsSwiping) return;
+            const link = e.target.closest('.game-link'); if (!link) return; e.preventDefault(); if (globalIsSwiping) return; snd.playClick();
+            const url = link.getAttribute('data-url'); const isPlasma = link.classList.contains('card-plasma'); const overlay = document.getElementById('instruction-overlay'); overlay.className = 'system-overlay ' + (isPlasma ? 'theme-plasma' : 'theme-laser');
+            const btnBoot = document.getElementById('overlay-link'); btnBoot.className = 'btn-game hover-snd click-snd focus-pad-target ' + (isPlasma ? 'btn-plasma' : 'btn-laser'); btnBoot.innerText = isPlasma ? (currentLang === 'it' ? 'CONNETTI' : 'CONNECT') : (currentLang === 'it' ? 'AVVIA SISTEMA' : 'BOOT SYSTEM'); 
             
-            snd.playClick();
-            const url = link.getAttribute('data-url');
-            const isPlasma = link.classList.contains('card-plasma');
-            
-            const overlay = document.getElementById('instruction-overlay');
-            overlay.className = 'system-overlay ' + (isPlasma ? 'theme-plasma' : 'theme-laser');
-            
-            const btnBoot = document.getElementById('overlay-link');
-            btnBoot.className = 'btn-game hover-snd click-snd focus-pad-target ' + (isPlasma ? 'btn-plasma' : 'btn-laser');
-            btnBoot.innerText = isPlasma ? (currentLang === 'it' ? 'CONNETTI' : 'CONNECT') : (currentLang === 'it' ? 'AVVIA SISTEMA' : 'BOOT SYSTEM');
-            
+            // Passiamo sia l'URL che lo stato "esterno" al bottone di avvio
             btnBoot.setAttribute('data-target-url', url);
-            
-            document.getElementById('overlay-title').textContent = link.querySelector('h2').textContent;
-            document.getElementById('overlay-text').textContent = currentLang === 'it' ? link.getAttribute('data-overlay-it') : link.getAttribute('data-overlay-en');
+            btnBoot.setAttribute('data-is-external', isPlasma);
 
-            document.body.classList.add('modal-open'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.add('active');
+            document.getElementById('overlay-title').textContent = link.querySelector('h2').textContent; document.getElementById('overlay-text').textContent = currentLang === 'it' ? link.getAttribute('data-overlay-it') : link.getAttribute('data-overlay-en'); document.body.classList.add('modal-open'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.add('active');
         });
 
-        function openHelp() {
-            snd.playClick();
-            const overlay = document.getElementById('help-overlay');
-            document.body.classList.add('modal-open'); 
-            overlay.setAttribute('aria-hidden', 'false'); 
-            overlay.classList.add('active');
-        }
-
-        function closeOverlay(id) {
-            snd.playClick(); 
-            const overlay = document.getElementById(id);
-            overlay.classList.remove('active'); 
-            overlay.setAttribute('aria-hidden', 'true'); 
-            document.body.classList.remove('modal-open');
-        }
+        function openHelp() { snd.playClick(); const overlay = document.getElementById('help-overlay'); document.body.classList.add('modal-open'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.add('active'); }
+        function closeOverlay(id) { snd.playClick(); const overlay = document.getElementById(id); overlay.classList.remove('active'); overlay.setAttribute('aria-hidden', 'true'); document.body.classList.remove('modal-open'); }
 
         document.getElementById('overlay-link').addEventListener('click', function() {
-            snd.playClick();
-            const url = this.getAttribute('data-target-url');
-            document.getElementById('game-frame').src = url; 
-            
-            closeOverlay('instruction-overlay');
-            document.getElementById('sys-bar').classList.remove('visible'); 
-            navTo('screen-game'); 
+            snd.playClick(); 
+            const url = this.getAttribute('data-target-url'); 
+            const isExternal = this.getAttribute('data-is-external') === 'true';
+
+            if (isExternal) {
+                // Se è itch.io, apri in una nuova scheda
+                window.open(url, '_blank');
+                closeOverlay('instruction-overlay');
+            } else {
+                // Se è github, carica nell'iframe interno
+                document.getElementById('game-frame').src = url; 
+                closeOverlay('instruction-overlay');
+                navTo('screen-game'); 
+            }
         });
 
-        function exitGame() {
-            snd.playClick();
-            document.getElementById('game-frame').src = ''; 
-            document.getElementById('sys-bar').classList.add('visible'); 
-            navTo('screen-gateway'); 
-        }
+        function exitGame() { snd.playClick(); document.getElementById('game-frame').src = ''; navTo('screen-gateway'); }
 
-        // === MULTILINGUA ===
         const translations = {
-            it: { subtitle: "Tutti i progetti", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "TRASCINA PER INSERIRE ⬇", gate_git_desc: "12 Giochi + Moduli", gate_itch_desc: "Standalone & Support", btn_init: "Inizializza", btn_cancel: "Annulla", btn_boot: "Avvia Sistema", btn_back: "◀ RIT.", privacy_text: "Privacy by Design: Nessun tracciamento. Salvataggi in locale.", btn_exit_game: "◀ CHIUDI GIOCO",
-                  help_p1: "Cos'è TheOldSmokeArcade1984?", help_p2: "Non è un semplice sito web. È un OS virtuale che funge da Hub per la mia collezione indipendente di giochi.", help_l1: "🎮 Giochi completi in-browser", help_l2: "🖥️ Zero-Assets (Tutto codice, zero PNG/MP3 esterni)", help_l3: "🔒 Privacy assoluta: no server, no tracking" },
-            en: { subtitle: "All Projects", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "DRAG TO INSERT ⬇", gate_git_desc: "12 Games + Modules", gate_itch_desc: "Standalone & Support", btn_init: "Initialize", btn_cancel: "Cancel", btn_boot: "Boot System", btn_back: "◀ BACK", privacy_text: "Privacy by Design: No tracking. Local saves only.", btn_exit_game: "◀ CLOSE GAME",
-                  help_p1: "What is TheOldSmokeArcade1984?", help_p2: "Not just a website. It's a virtual OS acting as a Hub for my indie game collection.", help_l1: "🎮 Full in-browser games", help_l2: "🖥️ Zero-Assets (Pure code, no external PNG/MP3)", help_l3: "🔒 Absolute privacy: no servers, no tracking" }
+            it: { subtitle: "Tutti i progetti", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "TRASCINA PER INSERIRE ⬇", gate_git_desc: "12 Giochi + Moduli", gate_itch_desc: "Standalone & Support", btn_init: "Inizializza", btn_cancel: "Annulla", btn_boot: "Avvia Sistema", btn_back: "◀ RIT.", privacy_text: "Privacy by Design: Nessun tracciamento. Salvataggi in locale.", btn_exit_game: "◀ CHIUDI GIOCO", help_p1: "Cos'è TheOldSmokeArcade1984?", help_p2: "Non è un semplice sito web. È un OS virtuale che funge da Hub per la mia collezione indipendente di giochi.", help_l1: "🎮 Giochi completi in-browser", help_l2: "🖥️ Zero-Assets (Tutto codice, zero PNG/MP3 esterni)", help_l3: "🔒 Privacy assoluta: no server, no tracking" },
+            en: { subtitle: "All Projects", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "DRAG TO INSERT ⬇", gate_git_desc: "12 Games + Modules", gate_itch_desc: "Standalone & Support", btn_init: "Initialize", btn_cancel: "Cancel", btn_boot: "Boot System", btn_back: "◀ BACK", privacy_text: "Privacy by Design: No tracking. Local saves only.", btn_exit_game: "◀ CLOSE GAME", help_p1: "What is TheOldSmokeArcade1984?", help_p2: "Not just a website. It's a virtual OS acting as a Hub for my indie game collection.", help_l1: "🎮 Full in-browser games", help_l2: "🖥️ Zero-Assets (Pure code, no external PNG/MP3)", help_l3: "🔒 Absolute privacy: no servers, no tracking" }
         };
         let currentLang = 'it';
 
         function setLang(lang) {
-            currentLang = lang;
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.innerText.toLowerCase() === lang));
+            currentLang = lang; document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.toggle('active', btn.innerText.toLowerCase() === lang));
             document.querySelectorAll('[data-i18n]').forEach(el => { if (translations[lang][el.getAttribute('data-i18n')]) el.innerText = translations[lang][el.getAttribute('data-i18n')]; });
             document.querySelectorAll('p[data-i18n-dyn-card-it]').forEach(p => { const t = p.getAttribute('data-i18n-dyn-card-' + lang); if (t) p.innerText = t; });
-
-            document.querySelectorAll('#sys-bar .sys-btn').forEach(btn => {
-                const text = lang === 'it' ? btn.getAttribute('data-tooltip-it') : btn.getAttribute('data-tooltip-en');
-                if (text) btn.setAttribute('data-tooltip', text);
-            });
-            
-            if(document.getElementById('drag-txt').innerHTML.includes('LOADING')) {
-                document.getElementById('drag-txt').innerHTML = lang === 'it' ? 
-                "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..." :
-                "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB...";
-            }
+            document.querySelectorAll('#sys-bar .sys-btn').forEach(btn => { const text = lang === 'it' ? btn.getAttribute('data-tooltip-it') : btn.getAttribute('data-tooltip-en'); if (text) btn.setAttribute('data-tooltip', text); });
+            if(document.getElementById('drag-txt').innerHTML.includes('LOADING')) { document.getElementById('drag-txt').innerHTML = lang === 'it' ? "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..." : "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..."; }
         }
 
-        // === FULLSCREEN ===
-        function toggleFullScreen() {
-            const btn = document.getElementById('fs-btn');
-            const doc = document.documentElement;
-            if (!document.fullscreenElement) { 
-                if (doc.requestFullscreen) doc.requestFullscreen().then(() => btn.classList.add('active')).catch(()=>{}); 
-            } else { 
-                if (document.exitFullscreen) { document.exitFullscreen(); btn.classList.remove('active'); }
-            }
-        }
+        function toggleFullScreen() { const btn = document.getElementById('fs-btn'); const doc = document.documentElement; if (!document.fullscreenElement) { if (doc.requestFullscreen) doc.requestFullscreen().then(() => btn.classList.add('active')).catch(()=>{}); } else { if (document.exitFullscreen) { document.exitFullscreen(); btn.classList.remove('active'); } } }
 
         document.addEventListener('DOMContentLoaded', () => {
             document.addEventListener('mouseover', e => { if (e.target.closest('.hover-snd')) snd.playHover(); });
             document.addEventListener('mousedown', e => { if (e.target.closest('.click-snd')) snd.playClick(); });
-
-            setTimeout(() => {
-                document.querySelectorAll('#sys-bar .sys-btn').forEach(btn => {
-                    const it = btn.getAttribute('data-tooltip-it');
-                    if (it) btn.setAttribute('data-tooltip', it);
-                });
-            }, 120);
+            setTimeout(() => { document.querySelectorAll('#sys-bar .sys-btn').forEach(btn => { const it = btn.getAttribute('data-tooltip-it'); if (it) btn.setAttribute('data-tooltip', it); }); }, 120);
         });
     </script>
 </body>
