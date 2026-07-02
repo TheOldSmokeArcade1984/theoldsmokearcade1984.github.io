@@ -1,8 +1,8 @@
-const CACHE_NAME = 'arcade-os-v18';
+const CACHE_NAME = 'arcade-os-v21';
 const urlsToCache = [
   './index.html',
   './index.html?v=landscape',
-  './manifest.json'
+  './manifest-v2.json'
 ];
 
 self.addEventListener('install', event => {

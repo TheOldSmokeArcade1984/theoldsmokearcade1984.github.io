@@ -152,6 +152,10 @@
         #pwa-install-btn { color: #fff; border-color: var(--laser-sec); background: rgba(0, 255, 204, 0.1); box-shadow: 0 0 10px rgba(0,255,204,0.3); display: none; }
         #pwa-install-btn:hover { background: var(--laser-sec); color: #000; }
 
+        .btn-back { color: var(--laser-pri); border-color: var(--laser-pri); opacity: 0; pointer-events: none; }
+        .btn-back.visible { opacity: 1; pointer-events: auto; }
+        .btn-back:hover { background: var(--laser-pri); color: var(--text-main); box-shadow: 0 0 15px var(--laser-pri); }
+
         /* === 4. SEQUENZA DI BOOT === */
         #screen-boot { background: #000; z-index: 9000; }
         .title-container { position: absolute; top: 15%; display: inline-block; z-index: 5; }
@@ -207,6 +211,7 @@
         .slider-bottom-controls { display: flex; align-items: center; justify-content: center; gap: 25px; margin-top: 25px; width: 100%; }
         
         .nav-btn { background: transparent; border: none; font-size: 2.5rem; font-family: monospace; cursor: pointer; padding: 5px; z-index: 20; transition: transform 0.2s, text-shadow 0.2s; display: flex; align-items: center; justify-content: center; }
+        .nav-btn:active, .nav-btn.pressed { transform: scale(0.8); }
         .laser-btn { color: var(--laser-pri); text-shadow: 0 0 15px rgba(255,0,85,0.8); }
         .laser-btn:hover { text-shadow: 0 0 25px var(--laser-pri); }
         .plasma-btn { color: var(--plasma-pri); text-shadow: 0 0 15px rgba(188, 19, 254, 0.8); }
@@ -270,7 +275,7 @@
         
         /* === 8. GAME IFRAME === */
         #screen-game { background: #000; z-index: 90000; padding: 0 !important; padding-top: 60px !important; display: flex; flex-direction: column; }
-        #game-frame { flex: 1; width: 100vw; border: none; background: #000; }
+        #game-frame { flex: 1; width: 100vw; border: none; background: transparent; } /* Sfondo trasparente per far risaltare il widget */
         .btn-exit-game {
             position: absolute; top: 75px; left: 15px; z-index: 999999;
             background: rgba(5, 1, 10, 0.85); border: 2px solid var(--laser-pri); color: var(--laser-pri);
@@ -278,7 +283,7 @@
             cursor: pointer; text-transform: uppercase; backdrop-filter: blur(5px);
             box-shadow: 0 0 15px rgba(255,0,85,0.4); transition: all 0.3s;
         }
-        .btn-exit-game:hover { background: var(--laser-pri); color: #fff; transform: scale(1.05); }
+        .btn-exit-game:hover, .btn-exit-game:active { background: var(--laser-pri); color: #fff; transform: scale(1.05); }
 
         /* === 9. VERSIONE PC E LANDSCAPE === */
         @media (min-width: 900px) {
@@ -340,7 +345,7 @@
                     aria-label="Installa come App PWA"
                     data-tooltip-it="Installa Web App"
                     data-tooltip-en="Install Web App">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>&nbsp;APP
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>&nbsp;APP
             </button>
             <button class="sys-btn active hover-snd click-snd" id="audio-btn" onclick="toggleAudio()" 
                     aria-label="Attiva/Disattiva audio"
@@ -350,7 +355,7 @@
                     aria-label="Schermo Intero"
                     data-tooltip-it="Schermo Intero"
                     data-tooltip-en="Full Screen">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
             </button>
             <button class="sys-btn active lang-btn hover-snd click-snd" onclick="setLang('it')">IT</button>
             <button class="sys-btn lang-btn hover-snd click-snd" onclick="setLang('en')">EN</button>
@@ -382,9 +387,16 @@
         <h1 class="os-title">TheOldSmoke<br>Arcade1984</h1>
         <p class="os-subtitle" data-i18n="subtitle">Tutti i progetti</p>
         <div class="gateway-controls">
-            <div class="gateway-btn gateway-laser hover-snd click-snd" onclick="navTo('screen-github')" role="button" tabindex="0"><span data-i18n="gate_git">/// Server Hub [GitHub]</span><span class="gateway-desc" data-i18n="gate_git_desc">12 Giochi + Moduli</span></div>
-            <div class="gateway-btn gateway-plasma hover-snd click-snd" onclick="navTo('screen-itch')" role="button" tabindex="0"><span data-i18n="gate_itch">>_ Mirror Nodes [itch.io]</span><span class="gateway-desc" data-i18n="gate_itch_desc">Standalone & Support</span></div>
+            <div class="gateway-btn gateway-laser hover-snd click-snd focus-pad-target" id="gate-git-btn" onclick="navTo('screen-github')" role="button" tabindex="0">
+                <span data-i18n="gate_git">/// Server Hub [GitHub]</span>
+                <span class="gateway-desc" data-i18n="gate_git_desc">12 Giochi + Moduli</span>
+            </div>
+            <div class="gateway-btn gateway-plasma hover-snd click-snd focus-pad-target" id="gate-itch-btn" onclick="navTo('screen-itch')" role="button" tabindex="0">
+                <span data-i18n="gate_itch">>_ Mirror Nodes [itch.io]</span>
+                <span class="gateway-desc" data-i18n="gate_itch_desc">Standalone & Support</span>
+            </div>
         </div>
+        <div class="privacy-note" data-i18n="privacy_text">Privacy by Design: Nessun tracciamento. Salvataggi in locale.</div>
     </div>
 
     <div id="screen-github" class="screen laser-zone">
@@ -411,8 +423,8 @@
             <h2 id="overlay-title" class="overlay-title">TITOLO</h2>
             <div id="overlay-text" class="overlay-text">Istruzioni operative...</div>
             <div class="overlay-controls">
-                <button id="overlay-link" class="btn-game hover-snd click-snd" data-i18n="btn_boot">Avvia Sistema</button>
-                <button class="btn-close hover-snd click-snd" onclick="closeOverlay('instruction-overlay')" data-i18n="btn_cancel">Annulla</button>
+                <button id="overlay-link" class="btn-game hover-snd click-snd focus-pad-target" data-i18n="btn_boot">Avvia Sistema</button>
+                <button class="btn-close hover-snd click-snd focus-pad-target" onclick="closeOverlay('instruction-overlay')" data-i18n="btn_cancel">Annulla</button>
             </div>
         </div>
     </div>
@@ -429,7 +441,7 @@
                     <li data-i18n="help_l3">🔒 Privacy assoluta: no server, no tracking</li>
                 </ul>
             </div>
-            <div class="overlay-controls"><button class="btn-close hover-snd click-snd" onclick="closeOverlay('help-overlay')">[ OK ]</button></div>
+            <div class="overlay-controls"><button class="btn-close hover-snd click-snd focus-pad-target" onclick="closeOverlay('help-overlay')">[ OK ]</button></div>
         </div>
     </div>
 
@@ -440,11 +452,28 @@
             { genre: "LOGIC PUZZLE", title: "KNIGHT'S TOUR", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.github.io/Knigth-s_Tour/", overlay: { it: "Algoritmo logico caricato.\\nMuovi il cavallo toccando tutte le caselle della scacchiera.", en: "Logic algorithm loaded.\\nMove the knight touching all squares." }, cardDesc: { it: "Risolvi il classico enigma scacchistico.", en: "Solve the classic chess enigma." } },
             { genre: "ARCADE ACTION", title: "NEON SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.github.io/Neon_Specter/", overlay: { it: "Azione arcade frenetica.\\nObiettivo: Sfuggi al sistema.", en: "Frantic arcade action.\\nObjective: Escape the system." }, cardDesc: { it: "Sfuggi ai sistemi di sicurezza nella città al neon.", en: "Escape security systems in the neon city." } }
         ];
+        
+        // I TUOI LINK RECUPERATI DA ITCH.IO + STILE NEON INIETTATO!
         const gamesItch = [
-            { genre: "STANDALONE DOWNLOAD", title: "NODE: ARCADE", subtitle: "Arcade Collection", url: "https://theoldsmokearcade1984.itch.io/theoldsmokearcade1984", overlay: { it: "Connessione remota al circuito itch.io.\\nScarica la versione standalone dell'Arcade Collection.\\nSupporta lo sviluppo lasciando un feedback.", en: "Remote connection to itch.io.\\nDownload standalone version of the Arcade Collection.\\nSupport development by leaving feedback." }, cardDesc: { it: "Eseguibile remoto scaricabile sul circuito itch.io.", en: "Remote executable available on the itch.io circuit." } },
-            { genre: "STANDALONE DOWNLOAD", title: "NODE: PROTOCOLLO 0", subtitle: "Protocollo Zero", url: "https://theoldsmokearcade1984.itch.io/protocollo-zero-null-sector", overlay: { it: "Connessione remota al circuito itch.io.\\nAccesso ai file di distribuzione del modulo Null Sector.", en: "Remote connection to itch.io.\\nAccess distribution files for the Null Sector module." }, cardDesc: { it: "Scarica la versione indipendente del modulo Null Sector.", en: "Download the standalone version of the Null Sector module." } },
-            { genre: "STANDALONE DOWNLOAD", title: "NODE: KNIGHT", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.itch.io/knights-tour", overlay: { it: "Connessione remota al circuito itch.io.\\nCompeti nelle classifiche globali scaricando il pacchetto autonomo.", en: "Remote connection to itch.io.\\nCompete in global leaderboards with the standalone package." }, cardDesc: { it: "Classifiche globali e pacchetti di installazione indipendenti.", en: "Global leaderboards and independent installation packages." } },
-            { genre: "STANDALONE DOWNLOAD", title: "NODE: SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.itch.io/neonspecter", overlay: { it: "Connessione remota al circuito itch.io.\\nMirror ufficiale del progetto Neon Specter per il download diretto.", en: "Remote connection to itch.io.\\nOfficial mirror of the Neon Specter project for direct download." }, cardDesc: { it: "Accesso diretto alla directory di distribuzione ufficiale itch.", en: "Direct access to the official itch distribution directory." } }
+            { genre: "WIDGET ITCH.IO", title: "NODE: ARCADE", subtitle: "Arcade Collection", 
+              url: "https://itch.io/embed/4408114?bg_color=05010a&fg_color=ffffff&link_color=00ffcc&border_color=ff0055", 
+              overlay: { it: "Connessione remota al widget itch.io.\\nScarica la versione standalone e supporta lo sviluppo.", en: "Remote connection to itch.io widget.\\nDownload standalone version and support." }, 
+              cardDesc: { it: "Widget ufficiale itch.io per download/supporto.", en: "Official itch.io widget for download/support." } },
+            
+            { genre: "WIDGET ITCH.IO", title: "NODE: PROTOCOLLO 0", subtitle: "Protocollo Zero", 
+              url: "https://itch.io/embed/4555569?bg_color=05010a&fg_color=ffffff&link_color=00ffcc&border_color=ff0055", 
+              overlay: { it: "Connessione remota al widget itch.io.\\nAccesso al download del modulo Null Sector.", en: "Remote connection to itch.io widget.\\nAccess distribution files." }, 
+              cardDesc: { it: "Widget ufficiale itch.io per download/supporto.", en: "Official itch.io widget for download/support." } },
+            
+            { genre: "WIDGET ITCH.IO", title: "NODE: KNIGHT", subtitle: "Knight's Tour", 
+              url: "https://itch.io/embed/4482953?bg_color=05010a&fg_color=ffffff&link_color=00ffcc&border_color=ff0055", 
+              overlay: { it: "Connessione remota al widget itch.io.\\nAccesso ai pacchetti indipendenti.", en: "Remote connection to itch.io widget.\\nStandalone package access." }, 
+              cardDesc: { it: "Widget ufficiale itch.io per download/supporto.", en: "Official itch.io widget for download/support." } },
+            
+            { genre: "WIDGET ITCH.IO", title: "NODE: SPECTER", subtitle: "Neon Specter", 
+              url: "https://itch.io/embed/4470252?bg_color=05010a&fg_color=ffffff&link_color=00ffcc&border_color=ff0055", 
+              overlay: { it: "Connessione remota al widget itch.io.\\nMirror ufficiale Neon Specter.", en: "Remote connection to itch.io widget.\\nOfficial Neon Specter mirror." }, 
+              cardDesc: { it: "Widget ufficiale itch.io per download/supporto.", en: "Official itch.io widget for download/support." } }
         ];
 
         let audioEnabled = true;
@@ -523,9 +552,7 @@
             const url = link.getAttribute('data-url'); const isPlasma = link.classList.contains('card-plasma'); const overlay = document.getElementById('instruction-overlay'); overlay.className = 'system-overlay ' + (isPlasma ? 'theme-plasma' : 'theme-laser');
             const btnBoot = document.getElementById('overlay-link'); btnBoot.className = 'btn-game hover-snd click-snd focus-pad-target ' + (isPlasma ? 'btn-plasma' : 'btn-laser'); btnBoot.innerText = isPlasma ? (currentLang === 'it' ? 'CONNETTI' : 'CONNECT') : (currentLang === 'it' ? 'AVVIA SISTEMA' : 'BOOT SYSTEM'); 
             
-            // Passiamo sia l'URL che lo stato "esterno" al bottone di avvio
             btnBoot.setAttribute('data-target-url', url);
-            btnBoot.setAttribute('data-is-external', isPlasma);
 
             document.getElementById('overlay-title').textContent = link.querySelector('h2').textContent; document.getElementById('overlay-text').textContent = currentLang === 'it' ? link.getAttribute('data-overlay-it') : link.getAttribute('data-overlay-en'); document.body.classList.add('modal-open'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.add('active');
         });
@@ -533,21 +560,14 @@
         function openHelp() { snd.playClick(); const overlay = document.getElementById('help-overlay'); document.body.classList.add('modal-open'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.add('active'); }
         function closeOverlay(id) { snd.playClick(); const overlay = document.getElementById(id); overlay.classList.remove('active'); overlay.setAttribute('aria-hidden', 'true'); document.body.classList.remove('modal-open'); }
 
+        // === TUTTO SI APRE INTERNAMENTE ===
         document.getElementById('overlay-link').addEventListener('click', function() {
             snd.playClick(); 
             const url = this.getAttribute('data-target-url'); 
-            const isExternal = this.getAttribute('data-is-external') === 'true';
-
-            if (isExternal) {
-                // Se è itch.io, apri in una nuova scheda
-                window.open(url, '_blank');
-                closeOverlay('instruction-overlay');
-            } else {
-                // Se è github, carica nell'iframe interno
-                document.getElementById('game-frame').src = url; 
-                closeOverlay('instruction-overlay');
-                navTo('screen-game'); 
-            }
+            
+            document.getElementById('game-frame').src = url; 
+            closeOverlay('instruction-overlay');
+            navTo('screen-game'); 
         });
 
         function exitGame() { snd.playClick(); document.getElementById('game-frame').src = ''; navTo('screen-gateway'); }
