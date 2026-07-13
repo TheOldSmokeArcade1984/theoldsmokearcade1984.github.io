@@ -1,13 +1,12 @@
 {
   "name": "TheOldSmokeArcade1984 OS",
-  "short_name": "ArcadeOS V2",
-  "description": "Hub ufficiale di sviluppo indipendente retro arcade e cyberpunk.",
-  "start_url": "./index.html?v=landscape",
+  "short_name": "ArcadeOS",
+  "description": "Hub ufficiale di sviluppo indipendente retro arcade. Il Sistema osserva ma non registra. La privacy è locale, la presenza è globale. La libertà è nel codice che non dipende da nulla.",
+  "start_url": "./index.html",
   "display": "fullscreen",
   "background_color": "#030305",
   "theme_color": "#030305",
-  "orientation": "any",
-  "categories": ["games", "entertainment"],
+  "orientation": "portrait",
   "icons": [
     {
       "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2305010a'/><path d='M32 8 L56 32 L32 56 L8 32 Z' fill='none' stroke='%2300ffcc' stroke-width='4'/><circle cx='32' cy='32' r='8' fill='%23ff0055'/></svg>",
