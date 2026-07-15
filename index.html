@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <link rel="canonical" href="https://theoldsmokearcade1984.github.io/" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TheOldSmokeArcade1984 - OS</title>
@@ -53,8 +52,11 @@
     </script>
 
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2305010a'/><path d='M32 8 L56 32 L32 56 L8 32 Z' fill='none' stroke='%2300ffcc' stroke-width='4'/><circle cx='32' cy='32' r='8' fill='%23ff0055'/></svg>" type="image/svg+xml">
-    <link rel="manifest" href="manifest-v2.json">
+    
+    <!-- PWA Manifest v3 & Meta aggiornato -->
+    <link rel="manifest" href="manifest-v3.json">
     <meta name="theme-color" content="#05010a">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="OldSmokeArcade">
@@ -72,19 +74,17 @@
             --plasma-sec: #fcee0a;
         }
 
-        /* === 1. RESET, BLOCCO SCROLL E FIX ZOOM AL 90% === */
+        /* === 1. RESET E BLOCCO SCROLL (Fix Scaling 100dvh) === */
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-tap-highlight-color: transparent; }
         
         html, body {
             background-color: var(--bg-void); color: var(--text-main);
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden; perspective: 1200px;
-            position: absolute;
+            position: fixed; 
             top: 0; left: 0;
-            width: 111.11%; 
-            height: 111.11%;
-            transform: scale(0.9);
-            transform-origin: 0 0;
+            width: 100vw; 
+            height: 100dvh; 
         }
 
         /* Effetto CRT Globale (Cinematic PC) */
@@ -109,7 +109,7 @@
         .screen {
             position: absolute; inset: 0; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; opacity: 0; pointer-events: none; 
-            z-index: 10; transform: scale(1.1) translateZ(-100px);
+            z-index: 10; transform: scale(1.05) translateZ(-100px);
             transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.4s ease;
         }
         
@@ -153,8 +153,8 @@
         #pwa-install-btn { color: #fff; border-color: var(--laser-sec); background: rgba(0, 255, 204, 0.1); box-shadow: 0 0 10px rgba(0,255,204,0.3); display: none; }
         #pwa-install-btn:hover { background: var(--laser-sec); color: #000; }
 
-        .btn-back { color: var(--laser-pri); border-color: var(--laser-pri); opacity: 0; pointer-events: none; }
-        .btn-back.visible { opacity: 1; pointer-events: auto; }
+        .btn-back { color: var(--laser-pri); border-color: var(--laser-pri); opacity: 0; display: none; pointer-events: none; }
+        .btn-back.visible { opacity: 1; display: flex; pointer-events: auto; }
         .btn-back:hover { background: var(--laser-pri); color: var(--text-main); box-shadow: 0 0 15px var(--laser-pri); }
 
         /* === 4. SEQUENZA DI BOOT === */
@@ -276,7 +276,7 @@
         
         /* === 8. GAME IFRAME === */
         #screen-game { background: #000; z-index: 90000; padding: 0 !important; padding-top: 60px !important; display: flex; flex-direction: column; }
-        #game-frame { flex: 1; width: 100vw; border: none; background: transparent; } /* Sfondo trasparente per far risaltare il widget */
+        #game-frame { flex: 1; width: 100vw; border: none; background: transparent; }
         .btn-exit-game {
             position: absolute; top: 75px; left: 15px; z-index: 999999;
             background: rgba(5, 1, 10, 0.85); border: 2px solid var(--laser-pri); color: var(--laser-pri);
@@ -332,6 +332,8 @@
                     aria-label="Torna alla Home"
                     data-tooltip-it="Torna alla Home / Chiudi Gioco"
                     data-tooltip-en="Return Home / Close Game">◀ HOME</button>
+            <button class="sys-btn btn-back hover-snd click-snd" id="btn-back" 
+                    onclick="navTo('screen-gateway')" data-i18n="btn_back">◀ RIT.</button>
             
             <button class="sys-btn hover-snd click-snd" onclick="openHelp()" 
                     aria-label="Info e Aiuto" style="color: var(--laser-sec); border-color: var(--laser-sec);"
@@ -367,7 +369,8 @@
         <div class="title-container"><div class="laser-spark" id="splash-spark"></div><div class="boot-title" id="splash-txt">TheOldSmoke<br>Arcade1984</div></div>
         <div class="laser-border"></div>
         <div class="interactive-area">
-            <div class="drag-instruction blinking" data-i18n="drag_coin" id="drag-txt">TRASCINA PER INSERIRE ⬇</div>
+            <!-- Rimosso testo Trascina e disattivato data-i18n -->
+            <div class="drag-instruction" id="drag-txt"></div>
             <div class="coin-wrapper" id="coin-wrapper">
                 <div class="finger-guide" id="finger-guide">👆</div>
                 <div class="coin-draggable hover-snd" id="drag-coin" role="button">
@@ -447,83 +450,137 @@
     </div>
 
     <script>
-        // === EASTER EGG CYBERPUNK NELLA CONSOLE ===
         console.log("%c/// MANIFESTO DI SISTEMA ///\n\nIl Sistema osserva ma non registra.\nLa privacy è locale, la presenza è globale.\nLa libertà è nel codice che non dipende da nulla.", "color: #00ffcc; font-family: monospace; font-size: 14px; text-shadow: 0 0 5px #00ffcc;");
 
         const gamesGithub = [
-            { genre: "12-IN-1 COLLECTION", title: "ARCADE HUB", subtitle: "Arcade Collection (12)", url: "https://theoldsmokearcade1984.github.io/TheTwelveClassicGameTheOldSmokeArcade1984/", overlay: { it: "Sistema operativo: Attivo.\\nAccesso alla libreria dei 12 titoli completi.\\nControlli touch integrati.", en: "OS: Active.\\nAccess to the full 12-game library.\\nIntegrated touch controls." }, cardDesc: { it: "La raccolta completa con controlli touch.", en: "The complete collection with touch controls." } },
-            { genre: "TACTICAL STEALTH", title: "NULL SECTOR", subtitle: "Octacore: Null Sector", url: "https://theoldsmokearcade1984.github.io/OCTACORE-NULL_SECTOR-Advanced/", overlay: { it: "Infiltrazione tattica richiesta.\\nModulo Advanced Edition attivato.", en: "Tactical infiltration required.\\nAdvanced Edition module activated." }, cardDesc: { it: "Sistema di infiltrazione tattica attivato.", en: "Tactical infiltration system activated." } },
-            { genre: "LOGIC PUZZLE", title: "KNIGHT'S TOUR", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.github.io/Knigth-s_Tour/", overlay: { it: "Algoritmo logico caricato.\\nMuovi il cavallo toccando tutte le caselle della scacchiera.", en: "Logic algorithm loaded.\\nMove the knight touching all squares." }, cardDesc: { it: "Risolvi il classico enigma scacchistico.", en: "Solve the classic chess enigma." } },
-            { genre: "ARCADE ACTION", title: "NEON SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.github.io/Neon_Specter/", overlay: { it: "Azione arcade frenetica.\\nObiettivo: Sfuggi al sistema.", en: "Frantic arcade action.\\nObjective: Escape the system." }, cardDesc: { it: "Sfuggi ai sistemi di sicurezza nella città al neon.", en: "Escape security systems in the neon city." } }
+            { genre: "12-IN-1 COLLECTION", title: "ARCADE HUB", subtitle: "Arcade Collection (12)", url: "https://theoldsmokearcade1984.github.io/TheTwelveClassicGameTheOldSmokeArcade1984/", overlay: { it: "Sistema operativo: Attivo.\nAccesso alla libreria dei 12 titoli completi.\nControlli touch integrati.", en: "OS: Active.\nAccess to the full 12-game library.\nIntegrated touch controls." }, cardDesc: { it: "La raccolta completa con controlli touch.", en: "The complete collection with touch controls." } },
+            { genre: "TACTICAL STEALTH", title: "NULL SECTOR", subtitle: "Octacore: Null Sector", url: "https://theoldsmokearcade1984.github.io/OCTACORE-NULL_SECTOR-Advanced/", overlay: { it: "Infiltrazione tattica richiesta.\nModulo Advanced Edition attivato.", en: "Tactical infiltration required.\nAdvanced Edition module activated." }, cardDesc: { it: "Sistema di infiltrazione tattica attivato.", en: "Tactical infiltration system activated." } },
+            { genre: "LOGIC PUZZLE", title: "KNIGHT'S TOUR", subtitle: "Knight's Tour", url: "https://theoldsmokearcade1984.github.io/Knigth-s_Tour/", overlay: { it: "Algoritmo logico caricato.\nMuovi il cavallo toccando tutte le caselle della scacchiera.", en: "Logic algorithm loaded.\nMove the knight touching all squares." }, cardDesc: { it: "Risolvi il classico enigma scacchistico.", en: "Solve the classic chess enigma." } },
+            { genre: "ARCADE ACTION", title: "NEON SPECTER", subtitle: "Neon Specter", url: "https://theoldsmokearcade1984.github.io/Neon_Specter/", overlay: { it: "Azione arcade frenetica.\nObiettivo: Sfuggi al sistema.", en: "Frantic arcade action.\nObjective: Escape the system." }, cardDesc: { it: "Sfuggi ai sistemi di sicurezza nella città al neon.", en: "Escape security systems in the neon city." } }
         ];
         
-        // I TUOI LINK RECUPERATI DA ITCH.IO + STILE NEON INIETTATO!
         const gamesItch = [
             { genre: "WIDGET ITCH.IO", title: "NODE: ARCADE", subtitle: "Arcade Collection", 
               url: "https://itch.io/embed/4408114?bg_color=05010a&fg_color=ffffff&link_color=00ffcc&border_color=ff0055", 
-              overlay: { it: "Connessione remota al widget itch.io.\\nScarica la versione standalone e supporta lo sviluppo.", en: "Remote connection to itch.io widget.\\nDownload standalone version and support." }, 
+              overlay: { it: "Connessione remota al widget itch.io.\nScarica la versione standalone e supporta lo sviluppo.", en: "Remote connection to itch.io widget.\nDownload standalone version and support." }, 
               cardDesc: { it: "Widget ufficiale itch.io per download/supporto.", en: "Official itch.io widget for download/support." } },
             
             { genre: "WIDGET ITCH.IO", title: "NODE: PROTOCOLLO 0", subtitle: "Protocollo Zero", 
               url: "https://itch.io/embed/4555569?bg_color=05010a&fg_color=ffffff&link_color=00ffcc&border_color=ff0055", 
-              overlay: { it: "Connessione remota al widget itch.io.\\nAccesso al download del modulo Null Sector.", en: "Remote connection to itch.io widget.\\nAccess distribution files." }, 
+              overlay: { it: "Connessione remota al widget itch.io.\nAccesso al download del modulo Null Sector.", en: "Remote connection to itch.io widget.\nAccess distribution files." }, 
               cardDesc: { it: "Widget ufficiale itch.io per download/supporto.", en: "Official itch.io widget for download/support." } },
             
             { genre: "WIDGET ITCH.IO", title: "NODE: KNIGHT", subtitle: "Knight's Tour", 
               url: "https://itch.io/embed/4482953?bg_color=05010a&fg_color=ffffff&link_color=00ffcc&border_color=ff0055", 
-              overlay: { it: "Connessione remota al widget itch.io.\\nAccesso ai pacchetti indipendenti.", en: "Remote connection to itch.io widget.\\nStandalone package access." }, 
+              overlay: { it: "Connessione remota al widget itch.io.\nAccesso ai pacchetti indipendenti.", en: "Remote connection to itch.io widget.\nStandalone package access." }, 
               cardDesc: { it: "Widget ufficiale itch.io per download/supporto.", en: "Official itch.io widget for download/support." } },
             
             { genre: "WIDGET ITCH.IO", title: "NODE: SPECTER", subtitle: "Neon Specter", 
               url: "https://itch.io/embed/4470252?bg_color=05010a&fg_color=ffffff&link_color=00ffcc&border_color=ff0055", 
-              overlay: { it: "Connessione remota al widget itch.io.\\nMirror ufficiale Neon Specter.", en: "Remote connection to itch.io widget.\\nOfficial Neon Specter mirror." }, 
+              overlay: { it: "Connessione remota al widget itch.io.\nMirror ufficiale Neon Specter.", en: "Remote connection to itch.io widget.\nOfficial Neon Specter mirror." }, 
               cardDesc: { it: "Widget ufficiale itch.io per download/supporto.", en: "Official itch.io widget for download/support." } }
         ];
 
         let audioEnabled = true;
         const snd = {
             ctx: null, masterGain: null, droneOsc: null, droneLfo: null,
-            init() { if (this.ctx) return; this.ctx = new (window.AudioContext || window.webkitAudioContext)(); this.masterGain = this.ctx.createGain(); this.masterGain.gain.value = 0.5; this.masterGain.connect(this.ctx.destination); this.startDrone(); },
-            playHover() { if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return; const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.type = 'sine'; osc.frequency.setValueAtTime(880, this.ctx.currentTime); g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05); osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.05); },
-            playClick() { if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return; const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.type = 'square'; osc.frequency.setValueAtTime(440, this.ctx.currentTime); osc.frequency.exponentialRampToValueAtTime(55, this.ctx.currentTime + 0.2); g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2); osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.2); },
-            playBoot() { if (!audioEnabled || !this.ctx || this.ctx.state !== 'running') return; [440, 554.37, 659.25].forEach(freq => { const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); osc.type = 'sawtooth'; osc.frequency.value = freq; g.gain.setValueAtTime(0.15, this.ctx.currentTime); g.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 2.0); osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 2.0); }); },
-            startDrone() { this.droneOsc = this.ctx.createOscillator(); this.droneOsc.type = 'sawtooth'; this.droneOsc.frequency.value = 55; const filter = this.ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.Q.value = 5; this.droneLfo = this.ctx.createOscillator(); this.droneLfo.type = 'sine'; this.droneLfo.frequency.value = 0.5; const lfoGain = this.ctx.createGain(); lfoGain.gain.value = 400; this.droneLfo.connect(lfoGain); lfoGain.connect(filter.frequency); const g = this.ctx.createGain(); g.gain.value = 0.05; this.droneOsc.connect(filter); filter.connect(g); g.connect(this.masterGain); this.droneOsc.start(); this.droneLfo.start(); filter.frequency.setValueAtTime(200, this.ctx.currentTime); }
+            init() { 
+                if (this.ctx) return; 
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)(); 
+                this.masterGain = this.ctx.createGain(); 
+                this.masterGain.gain.value = 0.5; 
+                this.masterGain.connect(this.ctx.destination); 
+                this.startDrone(); 
+            },
+            playHover() { 
+                if (!audioEnabled || !this.ctx) return; 
+                if (this.ctx.state === 'suspended') this.ctx.resume(); 
+                const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); 
+                osc.type = 'sine'; osc.frequency.setValueAtTime(880, this.ctx.currentTime); 
+                g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.05); 
+                osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.05); 
+            },
+            playClick() { 
+                if (!audioEnabled || !this.ctx) return; 
+                if (this.ctx.state === 'suspended') this.ctx.resume(); 
+                const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); 
+                osc.type = 'square'; osc.frequency.setValueAtTime(440, this.ctx.currentTime); 
+                osc.frequency.exponentialRampToValueAtTime(55, this.ctx.currentTime + 0.2); 
+                g.gain.setValueAtTime(0.1, this.ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + 0.2); 
+                osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 0.2); 
+            },
+            playBoot() { 
+                if (!audioEnabled || !this.ctx) return; 
+                if (this.ctx.state === 'suspended') this.ctx.resume(); 
+                [440, 554.37, 659.25].forEach(freq => { 
+                    const osc = this.ctx.createOscillator(); const g = this.ctx.createGain(); 
+                    osc.type = 'sawtooth'; osc.frequency.value = freq; 
+                    g.gain.setValueAtTime(0.15, this.ctx.currentTime); 
+                    g.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 2.0); 
+                    osc.connect(g); g.connect(this.masterGain); osc.start(); osc.stop(this.ctx.currentTime + 2.0); 
+                }); 
+            },
+            startDrone() { 
+                this.droneOsc = this.ctx.createOscillator(); this.droneOsc.type = 'sawtooth'; this.droneOsc.frequency.value = 55; 
+                const filter = this.ctx.createBiquadFilter(); filter.type = 'lowpass'; filter.Q.value = 5; 
+                this.droneLfo = this.ctx.createOscillator(); this.droneLfo.type = 'sine'; this.droneLfo.frequency.value = 0.5; 
+                const lfoGain = this.ctx.createGain(); lfoGain.gain.value = 400; this.droneLfo.connect(lfoGain); lfoGain.connect(filter.frequency); 
+                const g = this.ctx.createGain(); g.gain.value = 0.05; 
+                this.droneOsc.connect(filter); filter.connect(g); g.connect(this.masterGain); 
+                this.droneOsc.start(); this.droneLfo.start(); filter.frequency.setValueAtTime(200, this.ctx.currentTime); 
+            }
         };
 
-        function toggleAudio() { audioEnabled = !audioEnabled; const btn = document.getElementById('audio-btn'); if (audioEnabled) { btn.classList.add('active'); btn.innerText = '🔊'; if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0.5, snd.ctx.currentTime, 0.1); } else { btn.classList.remove('active'); btn.innerText = '🔇'; if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0, snd.ctx.currentTime, 0.1); } }
+        function toggleAudio() { 
+            audioEnabled = !audioEnabled; const btn = document.getElementById('audio-btn'); 
+            if (audioEnabled) { btn.classList.add('active'); btn.innerText = '🔊'; if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0.5, snd.ctx.currentTime, 0.1); } 
+            else { btn.classList.remove('active'); btn.innerText = '🔇'; if (snd.masterGain && snd.ctx) snd.masterGain.gain.setTargetAtTime(0, snd.ctx.currentTime, 0.1); } 
+        }
 
         let deferredPrompt;
         const installBtn = document.getElementById('pwa-install-btn');
         window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt = e; installBtn.style.display = 'flex'; });
         installBtn.addEventListener('click', async () => { snd.playClick(); if (deferredPrompt) { deferredPrompt.prompt(); const { outcome } = await deferredPrompt.userChoice; if (outcome === 'accepted') installBtn.style.display = 'none'; deferredPrompt = null; } });
-        if ('serviceWorker' in navigator) { window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').then(r => console.log('SW Registrato')).catch(e => console.log('SW Errore:', e)); }); }
+        
+        if ('serviceWorker' in navigator) { 
+            window.addEventListener('load', () => { navigator.serviceWorker.register('sw.js').then(r => console.log('SW Registrato')).catch(e => console.log('SW Errore:', e)); }); 
+        }
 
         const coin = document.getElementById('drag-coin');
         let isCoinDragging = false, startCoinY = 0, currentCoinY = 0;
 
         function startDrag(e) {
-            isCoinDragging = true; document.getElementById('finger-guide').style.display = 'none'; document.getElementById('drag-txt').classList.remove('blinking'); document.getElementById('drag-txt').style.opacity = '0.3';
-            try { snd.init(); } catch (err) {} const point = e.touches ? e.touches[0] : e; startCoinY = point.clientY - currentCoinY; coin.style.transition = 'none'; coin.setPointerCapture(e.pointerId);
+            isCoinDragging = true; document.getElementById('finger-guide').style.display = 'none'; 
+            try { snd.init(); if (snd.ctx && snd.ctx.state === 'suspended') snd.ctx.resume(); } catch (err) {} 
+            const point = e.touches ? e.touches[0] : e; startCoinY = point.clientY - currentCoinY; coin.style.transition = 'none'; coin.setPointerCapture(e.pointerId);
         }
         function moveDrag(e) { if (!isCoinDragging) return; e.preventDefault(); const point = e.touches ? e.touches[0] : e; currentCoinY = point.clientY - startCoinY; if (currentCoinY < -50) currentCoinY = -50; if (currentCoinY > 150) currentCoinY = 150; coin.style.transform = `translateY(${currentCoinY}px)`; }
         function endDrag(e) {
             if (!isCoinDragging) return; isCoinDragging = false; try { coin.releasePointerCapture(e.pointerId); } catch (_) {}
             if (currentCoinY > 60) { coin.style.transition = 'all 0.5s ease-in'; coin.style.transform = `translateY(${currentCoinY + 100}px) scale(0.5) rotateX(60deg)`; coin.style.opacity = '0'; snd.playClick(); setTimeout(bootSystem, 600); } 
-            else { document.getElementById('drag-txt').style.opacity = '1'; document.getElementById('drag-txt').classList.add('blinking'); coin.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'; currentCoinY = 0; coin.style.transform = 'translateY(0px)'; }
+            else { coin.style.transition = 'transform 0.4s cubic-bezier(0.25, 1, 0.5, 1)'; currentCoinY = 0; coin.style.transform = 'translateY(0px)'; }
         }
         coin.addEventListener('pointerdown', startDrag); window.addEventListener('pointermove', moveDrag); window.addEventListener('pointerup', endDrag); window.addEventListener('pointercancel', endDrag);
 
         function bootSystem() {
             snd.playBoot(); const dragTxt = document.getElementById('drag-txt'); document.getElementById('coin-wrapper').style.display = 'none'; document.getElementById('coin-slot').style.display = 'none';
             dragTxt.style.opacity = '1'; dragTxt.style.textAlign = 'left'; dragTxt.style.fontFamily = 'monospace'; dragTxt.style.textTransform = 'none'; dragTxt.style.lineHeight = '1.8'; dragTxt.style.marginTop = '0';
-            const bootLog = currentLang === 'it' ? "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..." : "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..."; dragTxt.innerHTML = bootLog;
+            const bootLog = "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..."; dragTxt.innerHTML = bootLog;
             setTimeout(() => { navTo('screen-gateway'); setTimeout(() => document.getElementById('sys-bar').classList.add('visible'), 800); }, 2500);
         }
 
         function navTo(screenId) {
             document.querySelectorAll('.screen').forEach(s => { s.classList.remove('active'); setTimeout(() => { if(!s.classList.contains('active')) s.style.visibility = 'hidden'; }, 800); });
             const targetScreen = document.getElementById(screenId); targetScreen.style.visibility = 'visible'; targetScreen.classList.add('active');
-            const backBtn = document.getElementById('btn-back'); if (screenId === 'screen-github' || screenId === 'screen-itch') backBtn.classList.add('visible'); else backBtn.classList.remove('visible');
+            
+            const backBtn = document.getElementById('btn-back'); 
+            if (backBtn) {
+                if (screenId === 'screen-github' || screenId === 'screen-itch') {
+                    backBtn.classList.add('visible'); 
+                } else {
+                    backBtn.classList.remove('visible');
+                }
+            }
         }
 
         function navHome() {
@@ -564,11 +621,9 @@
         function openHelp() { snd.playClick(); const overlay = document.getElementById('help-overlay'); document.body.classList.add('modal-open'); overlay.setAttribute('aria-hidden', 'false'); overlay.classList.add('active'); }
         function closeOverlay(id) { snd.playClick(); const overlay = document.getElementById(id); overlay.classList.remove('active'); overlay.setAttribute('aria-hidden', 'true'); document.body.classList.remove('modal-open'); }
 
-        // === TUTTO SI APRE INTERNAMENTE ===
         document.getElementById('overlay-link').addEventListener('click', function() {
             snd.playClick(); 
             const url = this.getAttribute('data-target-url'); 
-            
             document.getElementById('game-frame').src = url; 
             closeOverlay('instruction-overlay');
             navTo('screen-game'); 
@@ -577,8 +632,8 @@
         function exitGame() { snd.playClick(); document.getElementById('game-frame').src = ''; navTo('screen-gateway'); }
 
         const translations = {
-            it: { subtitle: "Tutti i progetti", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "TRASCINA PER INSERIRE ⬇", gate_git_desc: "12 Giochi + Moduli", gate_itch_desc: "Standalone & Support", btn_init: "Inizializza", btn_cancel: "Annulla", btn_boot: "Avvia Sistema", btn_back: "◀ RIT.", privacy_text: "Privacy by Design: Nessun tracciamento. Salvataggi in locale.", btn_exit_game: "◀ CHIUDI GIOCO", help_p1: "Cos'è TheOldSmokeArcade1984?", help_p2: "Non è un semplice sito web. È un OS virtuale che funge da Hub per la mia collezione indipendente di giochi.", help_l1: "🎮 Giochi completi in-browser", help_l2: "🖥️ Zero-Assets (Tutto codice, zero PNG/MP3 esterni)", help_l3: "🔒 Privacy assoluta: no server, no tracking" },
-            en: { subtitle: "All Projects", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "DRAG TO INSERT ⬇", gate_git_desc: "12 Games + Modules", gate_itch_desc: "Standalone & Support", btn_init: "Initialize", btn_cancel: "Cancel", btn_boot: "Boot System", btn_back: "◀ BACK", privacy_text: "Privacy by Design: No tracking. Local saves only.", btn_exit_game: "◀ CLOSE GAME", help_p1: "What is TheOldSmokeArcade1984?", help_p2: "Not just a website. It's a virtual OS acting as a Hub for my indie game collection.", help_l1: "🎮 Full in-browser games", help_l2: "🖥️ Zero-Assets (Pure code, no external PNG/MP3)", help_l3: "🔒 Absolute privacy: no servers, no tracking" }
+            it: { subtitle: "Tutti i progetti", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "", gate_git_desc: "12 Giochi + Moduli", gate_itch_desc: "Standalone & Support", btn_init: "Inizializza", btn_cancel: "Annulla", btn_boot: "Avvia Sistema", btn_back: "◀ RIT.", privacy_text: "Privacy by Design: Nessun tracciamento. Salvataggi in locale.", btn_exit_game: "◀ CHIUDI GIOCO", help_p1: "Cos'è TheOldSmokeArcade1984?", help_p2: "Non è un semplice sito web. È un OS virtuale che funge da Hub per la mia collezione indipendente di giochi.", help_l1: "🎮 Giochi completi in-browser", help_l2: "🖥️ Zero-Assets (Tutto codice, zero PNG/MP3 esterni)", help_l3: "🔒 Privacy assoluta: no server, no tracking" },
+            en: { subtitle: "All Projects", gate_git: "/// Server Hub [GitHub]", gate_itch: ">_ Mirror Nodes [itch.io]", gate_git_title: "/// Server Hub", gate_itch_title: ">_ Mirror Nodes", drag_coin: "", gate_git_desc: "12 Games + Modules", gate_itch_desc: "Standalone & Support", btn_init: "Initialize", btn_cancel: "Cancel", btn_boot: "Boot System", btn_back: "◀ BACK", privacy_text: "Privacy by Design: No tracking. Local saves only.", btn_exit_game: "◀ CLOSE GAME", help_p1: "What is TheOldSmokeArcade1984?", help_p2: "Not just a website. It's a virtual OS acting as a Hub for my indie game collection.", help_l1: "🎮 Full in-browser games", help_l2: "🖥️ Zero-Assets (Pure code, no external PNG/MP3)", help_l3: "🔒 Absolute privacy: no servers, no tracking" }
         };
         let currentLang = 'it';
 
@@ -587,7 +642,7 @@
             document.querySelectorAll('[data-i18n]').forEach(el => { if (translations[lang][el.getAttribute('data-i18n')]) el.innerText = translations[lang][el.getAttribute('data-i18n')]; });
             document.querySelectorAll('p[data-i18n-dyn-card-it]').forEach(p => { const t = p.getAttribute('data-i18n-dyn-card-' + lang); if (t) p.innerText = t; });
             document.querySelectorAll('#sys-bar .sys-btn').forEach(btn => { const text = lang === 'it' ? btn.getAttribute('data-tooltip-it') : btn.getAttribute('data-tooltip-en'); if (text) btn.setAttribute('data-tooltip', text); });
-            if(document.getElementById('drag-txt').innerHTML.includes('LOADING')) { document.getElementById('drag-txt').innerHTML = lang === 'it' ? "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..." : "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..."; }
+            if(document.getElementById('drag-txt').innerHTML.includes('LOADING')) { document.getElementById('drag-txt').innerHTML = "> SYSTEM BOOT...<br>> LOADING INDIE GAMES...<br>> ZERO EXTERNAL ASSETS...<br>> PRIVACY: NO TRACKING.<br>> ENTERING HUB..."; }
         }
 
         function toggleFullScreen() { const btn = document.getElementById('fs-btn'); const doc = document.documentElement; if (!document.fullscreenElement) { if (doc.requestFullscreen) doc.requestFullscreen().then(() => btn.classList.add('active')).catch(()=>{}); } else { if (document.exitFullscreen) { document.exitFullscreen(); btn.classList.remove('active'); } } }

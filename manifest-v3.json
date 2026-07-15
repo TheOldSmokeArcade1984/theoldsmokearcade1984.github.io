@@ -1,0 +1,18 @@
+{
+  "name": "TheOldSmokeArcade1984 OS v3.0",
+  "short_name": "OldSmokeOS",
+  "description": "Hub ufficiale di giochi retro arcade e cyberpunk indie. 12 titoli giocabili nel browser o installabili come App.",
+  "start_url": "./",
+  "display": "fullscreen",
+  "background_color": "#05010a",
+  "theme_color": "#05010a",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%2305010a'/><path d='M32 8 L56 32 L32 56 L8 32 Z' fill='none' stroke='%2300ffcc' stroke-width='4'/><circle cx='32' cy='32' r='8' fill='%23ff0055'/></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
